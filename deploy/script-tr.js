@@ -11,25 +11,25 @@
   month: "11",
   year: "2026",
   address: "Thôn Ấp Giáo, xã Vĩnh Hải, thành phố Hải Phòng",
-  mapUrl: "https://maps.app.goo.gl/WYMqWyaiVoQQLs1M6",
+  mapUrl: "https://maps.app.goo.gl/gCym8cFC1UqeKQTHA",
   mapEmbedUrl:
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d846.2249474714474!2d106.48020222626349!3d20.6429102359104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135f5e2b65295b1%3A0x8c740e574d1ab8f2!2zw4FvIETDoGkgVGjhu51pIFRyYW5nIEzGsHUgVGjhuqFuaA!5e1!3m2!1sen!2s!4v1781679031487!5m2!1sen!2s",
+    "https://www.google.com/maps?q=20.64305004909796,106.48075769743204&z=18&output=embed",
   calendarUrl:
-    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ti盻㌘%20cﾆｰ盻嬖%20H盻ｯu%20Th蘯ｯng%20%26%20Thu%20Trang&dates=20261220T040000Z/20261220T070000Z&details=Trﾃ｢n%20tr盻肱g%20kﾃｭnh%20m盻拱%20b蘯｡n%20ﾄ黛ｺｿn%20chung%20vui&location=The%20Silk%20Garden%2C%20TP.%20H盻・20Chﾃｭ%20Minh",
+    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ti%E1%BB%87c%20c%C6%B0%E1%BB%9Bi%20H%E1%BB%AFu%20Th%E1%BA%AFng%20%26%20Thu%20Trang&dates=20261113T020000Z/20261113T050000Z&details=Tr%C3%A2n%20tr%E1%BB%8Dng%20k%C3%ADnh%20m%E1%BB%9Di%20b%E1%BA%A1n%20%C4%91%E1%BA%BFn%20chung%20vui&location=Th%C3%B4n%20%E1%BA%A4p%20Gi%C3%A1o%2C%20x%C3%A3%20V%C4%A9nh%20H%E1%BA%A3i%2C%20th%C3%A0nh%20ph%E1%BB%91%20H%E1%BA%A3i%20Ph%C3%B2ng",
   phone: "tel:+84901234567",
   groomParents: ["Đoàn Văn Lưu", "Phạm Thị Thạnh"],
-  brideParents: ["Phạm Văn Trung", "Bùi Thị Chấn"],
-  groomAddress: "25 Lê Lợi, Minh Khai, Hồng Bàng, Hải Phòng",
-  brideAddress: "76 Điện Biên Phủ, Hồng Bàng, Hải Phòng",
+  brideParents: ["Phạm Văn Trung", "Bùi Thị Chẵn"],
+  groomAddress: "Áo Dài Thời Trang Lưu Thạnh, thôn 3 An Quý, xã Vĩnh Hải, thành phố Hải Phòng",
+  brideAddress: "Thôn Ấp Giáo, xã Vĩnh Hải, thành phố Hải Phòng",
   photos: [
-    { src: "/assets/couple-photo.png", alt: "Anh cuoi 1" },
-    { src: "/assets/couple-photo.png", alt: "Anh cuoi 2" },
-    { src: "/assets/couple-photo.png", alt: "Anh cuoi 3" },
-    { src: "/assets/couple-photo.png", alt: "Anh cuoi 4" },
-    { src: "/assets/couple-photo.png", alt: "Anh cuoi 5" },
-    { src: "/assets/couple-photo.png", alt: "Anh cuoi 6" },
-    { src: "/assets/couple-photo.png", alt: "Anh cuoi 7" },
-    { src: "/assets/couple-photo.png", alt: "Anh cuoi 8" },
+    { src: "../assets/couple-photo.png", alt: "Anh cuoi 1" },
+    { src: "../assets/couple-photo.png", alt: "Anh cuoi 2" },
+    { src: "../assets/couple-photo.png", alt: "Anh cuoi 3" },
+    { src: "../assets/couple-photo.png", alt: "Anh cuoi 4" },
+    { src: "../assets/couple-photo.png", alt: "Anh cuoi 5" },
+    { src: "../assets/couple-photo.png", alt: "Anh cuoi 6" },
+    { src: "../assets/couple-photo.png", alt: "Anh cuoi 7" },
+    { src: "../assets/couple-photo.png", alt: "Anh cuoi 8" },
   ],
   timeline: [
     { time: "09:00", title: "Đón khách" },
@@ -83,8 +83,8 @@ function setMusicPlaybackState(isPlaying) {
   player.classList.remove("is-visible");
   iframe.src = isPlaying ? iframe.dataset.src : "about:blank";
   button.classList.toggle("is-playing", isPlaying);
-  button.setAttribute("aria-label", isPlaying ? "T蘯｡m d盻ｫng nh蘯｡c" : "B蘯ｭt nh蘯｡c");
-  button.setAttribute("title", isPlaying ? "T蘯｡m d盻ｫng nh蘯｡c" : "B蘯ｭt nh蘯｡c");
+  button.setAttribute("aria-label", isPlaying ? "Tạm dừng nhạc" : "Bật nhạc");
+  button.setAttribute("title", isPlaying ? "Tạm dừng nhạc" : "Bật nhạc");
   button.innerHTML = `<i data-lucide="${isPlaying ? "pause" : "music"}"></i>`;
   refreshIcons();
 }
@@ -119,7 +119,7 @@ function fillCalendar() {
   ].join("");
 
   $("#calendar").innerHTML = `
-    <div class="calendar__month">Thﾃ｡ng ${wedding.month} / ${wedding.year}</div>
+    <div class="calendar__month">Tháng ${wedding.month} / ${wedding.year}</div>
     <div class="calendar__week">${days.map((day) => `<span>${day}</span>`).join("")}</div>
     <div class="calendar__days">${cells}</div>
   `;
@@ -134,7 +134,7 @@ function setupCountdown() {
   const render = () => {
     const remaining = target - Date.now();
     if (remaining <= 0) {
-      element.textContent = "ﾄ静｣ ﾄ黛ｺｿn ngﾃy vui";
+      element.textContent = "Đã đến ngày vui";
       return;
     }
 
@@ -167,7 +167,7 @@ function setupCountdown() {
 
 function fillContent() {
   const names = `${wedding.groom} & ${wedding.bride}`;
-  document.title = `Thi盻㎝ cﾆｰ盻嬖 ${names}`;
+  document.title = `Thiệp cưới ${names}`;
   $("#coverNames").innerHTML = namesWithBreak();
   $("#heroNames").innerHTML = namesWithBreak();
   $("#announcementNames").innerHTML = namesWithBreak();
@@ -247,7 +247,7 @@ function setupAlbumLightbox() {
   const update = () => {
     const photo = wedding.photos[activeIndex];
     activeImage.src = photo.src;
-    activeImage.alt = photo.alt || `蘯｢nh cﾆｰ盻嬖 ${activeIndex + 1}`;
+    activeImage.alt = photo.alt || `Ảnh cưới ${activeIndex + 1}`;
     counter.textContent = `${activeIndex + 1} / ${wedding.photos.length}`;
     thumbButtons.forEach((button, index) => {
       const isActive = index === activeIndex;
@@ -332,13 +332,13 @@ async function setupWishes() {
         `,
       )
       .join("")
-      : `<article class="wish-item"><p>Hﾃ｣y lﾃ ngﾆｰ盻拱 ﾄ黛ｺｧu tiﾃｪn g盻ｭi l盻拱 chﾃｺc ﾄ黛ｺｿn cﾃｴ dﾃ｢u chﾃｺ r盻・</p></article>`;
+      : `<article class="wish-item"><p>Hãy là người đầu tiên gửi lời chúc đến cô dâu chú rể.</p></article>`;
   };
 
   if (saved.length === 0) {
     saved.push(
-      { name: "B蘯｡n thﾃ｢n", time: "20.04.2026", text: "Chﾃｺc hai b蘯｡n trﾄノ nﾄノ h蘯｡nh phﾃｺc." },
-      { name: "ﾄ雪ｻ渡g nghi盻㎝", time: "20.04.2026", text: "Chﾃｺc ngﾃy vui th蘯ｭt tr盻肱 v蘯ｹn vﾃ 蘯･m ﾃ｡p." },
+      { name: "Bạn thân", time: "20.04.2026", text: "Chúc hai bạn trăm năm hạnh phúc." },
+      { name: "Đồng nghiệp", time: "20.04.2026", text: "Chúc ngày vui thật trọn vẹn và ấm áp." },
     );
   }
 
@@ -353,7 +353,7 @@ async function setupWishes() {
       .limit(30);
 
     if (error) {
-      console.warn("Khﾃｴng th盻・t蘯｣i s盻・lﾆｰu bﾃｺt t盻ｫ Supabase:", error.message);
+      console.warn("Không thể tải sổ lưu bút từ Supabase:", error.message);
       return;
     }
 
@@ -380,7 +380,7 @@ async function setupWishes() {
     if (db) {
       const { error } = await db.from(WISH_TABLE).insert({ name, message: text });
       if (error) {
-        console.warn("Khﾃｴng th盻・g盻ｭi l盻拱 chﾃｺc lﾃｪn Supabase:", error.message);
+        console.warn("Không thể gửi lời chúc lên Supabase:", error.message);
         return;
       }
       await loadFromSupabase();
@@ -435,7 +435,7 @@ function setupRsvp() {
     const attendance = form.elements.attendance.value;
     if (!name) return;
 
-    status.textContent = "ﾄ紳ng g盻ｭi xﾃ｡c nh蘯ｭn...";
+    status.textContent = "Đang gửi xác nhận...";
     status.classList.remove("is-error");
     submitButton.disabled = true;
     submitButton.classList.add("is-loading");
@@ -456,8 +456,8 @@ function setupRsvp() {
       });
 
       if (error) {
-        console.warn("Khﾃｴng th盻・g盻ｭi xﾃ｡c nh蘯ｭn lﾃｪn Supabase:", error.message);
-        status.textContent = "Chﾆｰa g盻ｭi ﾄ柁ｰ盻｣c lﾃｪn database. Vui lﾃｲng ki盻ノ tra b蘯｣ng wedding_rsvps trong Supabase.";
+        console.warn("Không thể gửi xác nhận lên Supabase:", error.message);
+        status.textContent = "Chưa gửi được lên database. Vui lòng kiểm tra bảng wedding_rsvps trong Supabase.";
         status.classList.add("is-error");
         submitButton.disabled = false;
         submitButton.classList.remove("is-loading");
@@ -469,7 +469,7 @@ function setupRsvp() {
       localStorage.setItem("wedding-rsvps", JSON.stringify(saved.slice(0, 30)));
     }
 
-    status.textContent = "C蘯｣m ﾆ｡n b蘯｡n, xﾃ｡c nh蘯ｭn ﾄ妥｣ ﾄ柁ｰ盻｣c ghi nh蘯ｭn.";
+    status.textContent = "Cảm ơn bạn, xác nhận đã được ghi nhận.";
     form.reset();
     form.elements.attendance.value = "yes";
     submitButton.disabled = false;
