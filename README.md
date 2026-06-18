@@ -1,82 +1,161 @@
-# Thiệp cưới online
+# Wedding Invitation
 
-Website tĩnh gồm:
+Static wedding invitation website for Huu Thang and Thu Trang.
 
-- `Wedding_invitation_Th.html`: thiệp dùng map phiên bản Th.
-- `Wedding_invitation_Tr.html`: thiệp dùng map phiên bản Tr.
-- `styles.css`: giao diện, màu sắc, responsive.
-- `script-th.js`: thông tin thiệp phiên bản Th.
-- `script-tr.js`: thông tin thiệp phiên bản Tr.
-- `assets/silk-floral-bg.png`: ảnh nền hoa lụa nâu được tạo riêng cho thiệp này.
-- `assets/couple-photo.png`: ảnh cưới minh họa cho phần album.
+## Live Website
 
-## Cách chỉnh thông tin
-
-Mở `script-th.js` hoặc `script-tr.js` và sửa khối `wedding` ở đầu file:
-
-```js
-const wedding = {
-  groom: "Minh Anh",
-  bride: "Gia Hân",
-  dateISO: "2026-12-20T11:00:00+07:00",
-  displayDate: "Thứ bảy, 20 tháng 12 năm 2026",
-  shortDate: "20.12.2026",
-  time: "11:00 AM",
-  venue: "The Silk Garden",
-  address: "123 Đường Hạnh Phúc, Quận 1, TP. Hồ Chí Minh",
-  mapUrl: "https://maps.google.com/?q=The%20Silk%20Garden%20Ho%20Chi%20Minh",
-  mapEmbedUrl: "https://maps.google.com/maps?q=The%20Silk%20Garden%20Ho%20Chi%20Minh&output=embed",
-  phone: "tel:+84901234567",
-  rsvpUrl: "https://docs.google.com/forms/",
-  qrImage: "",
-};
-```
-
-## Cách thay ảnh cưới
-
-Copy ảnh thật của bạn vào thư mục `assets`, ví dụ:
-
-- `assets/photo-1.jpg`
-- `assets/photo-2.jpg`
-- `assets/photo-3.jpg`
-
-Sau đó sửa mảng `photos` trong file JS tương ứng:
-
-```js
-photos: [
-  {
-    src: "assets/photo-1.jpg",
-    alt: "Ảnh cưới của Minh Anh và Gia Hân",
-    title: "Khoảnh khắc của chúng mình",
-  },
-],
-```
-
-## Cách thay map
-
-Sửa `address`, `mapUrl`, và `mapEmbedUrl` trong file JS tương ứng.
-
-Với Google Maps, bạn có thể dùng dạng:
+Main page:
 
 ```text
-https://maps.google.com/maps?q=TÊN%20ĐỊA%20ĐIỂM&output=embed
+https://tntweddinginvitation.netlify.app/
 ```
 
-## Cách thay QR code
+Invitation links:
 
-Mặc định QR code được tạo từ `rsvpUrl`. Nếu bạn có ảnh QR thật, copy vào `assets`, ví dụ `assets/qr-code.png`, rồi sửa:
+```text
+https://tntweddinginvitation.netlify.app/Wedding_invitation_Thang/
+https://tntweddinginvitation.netlify.app/Wedding_invitation_Trang/
+```
+
+Legacy direct HTML links are also kept:
+
+```text
+https://tntweddinginvitation.netlify.app/Wedding_invitation_Th.html
+https://tntweddinginvitation.netlify.app/Wedding_invitation_Tr.html
+```
+
+## Project Structure
+
+```text
+deploy/
+  index.html
+  Wedding_invitation_Th.html
+  Wedding_invitation_Tr.html
+  Wedding_invitation_Thang/index.html
+  Wedding_invitation_Trang/index.html
+  script-th.js
+  script-tr.js
+  styles.css
+  assets/
+
+Wedding_invitation_Th.html
+Wedding_invitation_Tr.html
+script-th.js
+script-tr.js
+styles.css
+assets/
+supabase-wishes.sql
+netlify.toml
+```
+
+Netlify publishes the `deploy` folder. This is configured in:
+
+```toml
+[build]
+  publish = "deploy"
+```
+
+## Two Invitation Versions
+
+The project has two invitation versions:
+
+- `script-th.js`: version for Thang.
+- `script-tr.js`: version for Trang.
+
+Each version has its own map configuration and RSVP source marker:
 
 ```js
-qrImage: "assets/qr-code.png",
+invitationSide: "Th"
 ```
 
-## Cách xem
+or:
 
-Mở trực tiếp file `Wedding_invitation_Th.html` hoặc `Wedding_invitation_Tr.html` bằng trình duyệt.
+```js
+invitationSide: "Tr"
+```
 
-## Cách gửi cho bạn bè
+RSVP submissions are saved to the same Supabase table, with `invitation_side` used to know which invitation the guest submitted from.
 
-Bạn có thể upload toàn bộ thư mục này lên Netlify, Vercel, GitHub Pages hoặc hosting bất kỳ. Chỉ cần giữ nguyên các file cùng cấu trúc thư mục.
+## Editing Wedding Information
 
-# Example
-https://chungdoi.com/mau-thiep/hoa-lua-nau/demo
+Edit the `wedding` object at the top of the relevant JS file:
+
+```text
+script-th.js
+script-tr.js
+deploy/script-th.js
+deploy/script-tr.js
+```
+
+Important fields:
+
+```js
+dateISO: "2026-11-13T09:00:00+07:00",
+ceremonyISO: "2026-11-13T09:00:00+07:00",
+partyTime: "09:00",
+day: "13",
+month: "11",
+year: "2026",
+address: "...",
+mapUrl: "...",
+mapEmbedUrl: "...",
+```
+
+The countdown uses `dateISO`.
+
+## Album Images
+
+Album photos are configured in the `photos` array in each JS file.
+
+For deployed nested routes, use root-relative asset paths:
+
+```js
+{ src: "/assets/couple-photo.png", alt: "Anh cuoi 1" }
+```
+
+Place images inside:
+
+```text
+deploy/assets/
+assets/
+```
+
+## Supabase
+
+Guestbook and RSVP use Supabase.
+
+Run this SQL file in Supabase SQL Editor:
+
+```text
+supabase-wishes.sql
+```
+
+Tables:
+
+- `wedding_wishes`
+- `wedding_rsvps`
+
+The RSVP table includes:
+
+```text
+invitation_side
+```
+
+Allowed values:
+
+```text
+Th
+Tr
+```
+
+## Deploy
+
+This site is deployed on Netlify from the `main` branch.
+
+The publish directory is:
+
+```text
+deploy
+```
+
+After pushing to GitHub, Netlify should redeploy automatically.
