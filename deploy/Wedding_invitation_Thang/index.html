@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Thiệp cưới online - trân trọng kính mời bạn đến chung vui trong ngày hạnh phúc."
+    />
+    <title>Thiệp cưới Hữu Thắng &amp; Thu Trang</title>
+    <link rel="icon" type="image/jpeg" href="../assets/chu-hy-vector-18.jpg" />
+    <link rel="apple-touch-icon" href="../assets/chu-hy-vector-18.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&family=Charm:wght@400;700&family=Cormorant+Garamond:wght@500;600;700&family=The+Nautigal:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <section class="cover" id="cover" aria-label="Mở thiệp cưới">
+      <div class="cover-ambient" aria-hidden="true">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="cover-petals" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="cover__card">
+        <div class="cover-seal" aria-hidden="true">
+          <i data-lucide="heart"></i>
+        </div>
+        <h1 id="coverNames">Hữu Thắng<br />&amp;<br />Thu Trang</h1>
+        <div class="cover-divider" aria-hidden="true">
+          <span></span><b>❦</b><span></span>
+        </div>
+        <p class="cover__date" id="coverDate">13 tháng 11, 2026</p>
+        <p class="cover__invite">Thân Mời</p>
+        <button class="primary-button" id="openInvite" type="button">
+          <i data-lucide="mail-open"></i>
+          <span>Mở thiệp</span>
+        </button>
+      </div>
+    </section>
+
+    <main class="page">
+      <section class="hero-panel">
+        <div class="line-flower line-flower--hero" aria-hidden="true"></div>
+        <p class="label">The wedding of</p>
+        <h2 id="heroNames">Hữu Thắng<br />&amp;<br />Thu Trang</h2>
+      </section>
+
+      <section class="section family-section">
+        <h3>Thông tin lễ cưới</h3>
+        <div class="family-grid">
+          <article>
+            <p class="small-label">Nhà trai - Ông bà</p>
+            <strong id="groomParents">Đoàn Văn Lưu<br />Phạm Thị Thạnh</strong>
+            <span id="groomAddress">25 Lê Lợi, Minh Khai, Hồng Bàng, Hải Phòng</span>
+          </article>
+          <article>
+            <p class="small-label">Nhà gái - Ông bà</p>
+            <strong id="brideParents">Phạm Văn Trung<br />Bùi Thị Chẵn</strong>
+            <span id="brideAddress">76 Điện Biên Phủ, Hồng Bàng, Hải Phòng</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="section announcement">
+        <div class="line-flower line-flower--announcement" aria-hidden="true"></div>
+        <p>Trân trọng báo tin<br />lễ thành hôn của con chúng tôi</p>
+        <h2 id="announcementNames">Hữu Thắng<br /><span>&amp;</span><br />Thu Trang</h2>
+        <p class="small-label">Út nam &amp; út nữ</p>
+        <div class="ceremony-copy">
+          <span>Lễ thành hôn được cử hành tại tư gia vào lúc:</span>
+          <strong id="ceremonyHour">09:00</strong>
+          <div class="date-row">
+            <span>Chủ nhật</span>
+            <strong id="ceremonyDay">13</strong>
+            <span>Tháng 11</span>
+          </div>
+          <span id="ceremonyYear">2026</span>
+          <em>(Tức ngày 05 tháng 10 năm Bính Ngọ)</em>
+        </div>
+      </section>
+
+      <section class="section album-section">
+        <h3>Album Ảnh Cưới</h3>
+        <div class="album-frame">
+          <div class="photo-grid" id="photoGrid"></div>
+        </div>
+      </section>
+
+      <section class="section wedding-party">
+        <h3>Thông tin tiệc cưới</h3>
+        <p>Tiệc cưới sẽ diễn ra vào lúc:</p>
+        <strong id="partyTime">11:00</strong>
+        <div class="date-row date-row--compact">
+          <span>Chủ nhật</span>
+          <strong id="partyDay">13</strong>
+          <span>Tháng 11</span>
+        </div>
+        <span id="partyYear">2026</span>
+        <em>(Tức ngày 05 tháng 10 năm Bính Ngọ)</em>
+        <div class="countdown-block">
+          <h4>Cùng đếm ngược</h4>
+          <div class="countdown-text" id="countdownText">Đang tính thời gian...</div>
+        </div>
+        <div class="calendar" id="calendar"></div>
+        <div class="party-actions">
+          <a class="secondary-button" id="calendarLink" href="#" target="_blank" rel="noreferrer">
+            <i data-lucide="calendar-plus"></i>
+            <span>Thêm vào lịch</span>
+          </a>
+          <button class="confirm-button" id="openRsvp" type="button">
+            <i data-lucide="check-circle"></i>
+            <span>Xác nhận</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="section map-section">
+        <h3>Tiệc cưới sẽ tổ chức tại</h3>
+        <p id="mapAddress">The Silk Garden, 123 Đường Hạnh Phúc, Quận 1, TP. Hồ Chí Minh</p>
+        <div class="map-frame">
+          <iframe
+            id="mapEmbed"
+            title="Bản đồ địa điểm tổ chức tiệc cưới"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="about:blank"
+          ></iframe>
+        </div>
+        <a class="secondary-button" id="mapLink" href="#" target="_blank" rel="noreferrer">
+          <i data-lucide="navigation"></i>
+          <span>Xem bản đồ</span>
+        </a>
+      </section>
+
+      <!--
+      <section class="section timeline-section">
+        <h3>Lịch trình ngày cưới</h3>
+        <div class="timeline" id="timelineList"></div>
+      </section>
+      -->
+
+      <section class="section wishes">
+        <h3>Sổ lưu bút</h3>
+        <form id="wishForm">
+          <input id="guestName" name="guestName" placeholder="Nhập tên của bạn" autocomplete="name" />
+          <textarea id="guestWish" name="guestWish" placeholder="Nhập lời chúc của bạn"></textarea>
+          <button class="primary-button" type="submit">
+            <i data-lucide="send"></i>
+            <span>Gửi lời chúc</span>
+          </button>
+        </form>
+        <div class="wish-list" id="wishList"></div>
+      </section>
+
+      <section class="section gift-section">
+        <h3>QR mừng cưới</h3>
+        <div class="gift-grid">
+          <article class="qr-card">
+            <p id="groomQrName">Chú rể Hữu Thắng</p>
+            <img id="groomQrImage" src="" alt="QR mừng cưới chú rể" loading="lazy" />
+            <span id="groomBank">MB Bank - 0123456789</span>
+          </article>
+          <article class="qr-card">
+            <p id="brideQrName">Cô dâu Thu Trang</p>
+            <img id="brideQrImage" src="" alt="QR mừng cưới cô dâu" loading="lazy" />
+            <span id="brideBank">Vietcombank - 0987654321</span>
+          </article>
+        </div>
+        <p class="thanks">Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi.</p>
+      </section>
+    </main>
+
+    <div class="music-player" id="musicPlayer" aria-label="Trình phát nhạc cưới">
+      <iframe
+        scrolling="no"
+        width="640"
+        height="180"
+        src="about:blank"
+        data-src="https://zingmp3.vn/embed/song/Z6IC8WZE?start=true"
+        frameborder="0"
+        allow="autoplay; encrypted-media"
+        allowfullscreen="true"
+        title="Nhạc cưới"
+      ></iframe>
+    </div>
+
+    <button class="music-toggle" id="musicToggle" type="button" aria-label="Hiện trình phát nhạc">
+      <i data-lucide="music"></i>
+    </button>
+
+    <div class="lightbox" id="albumLightbox" aria-hidden="true">
+      <button class="lightbox__close" id="closeAlbum" type="button" aria-label="Đóng album">
+        <i data-lucide="x"></i>
+      </button>
+      <div class="lightbox__counter" id="albumCounter">1 / 1</div>
+      <div class="lightbox__stage" role="dialog" aria-modal="true" aria-label="Album ảnh cưới">
+        <button class="lightbox__nav lightbox__nav--prev" id="prevPhoto" type="button" aria-label="Ảnh trước">
+          <span>‹</span>
+        </button>
+        <img id="activeAlbumImage" src="" alt="Ảnh cưới" draggable="false" />
+        <button class="lightbox__nav lightbox__nav--next" id="nextPhoto" type="button" aria-label="Ảnh tiếp theo">
+          <span>›</span>
+        </button>
+      </div>
+      <div class="lightbox__thumbs" id="albumThumbs" aria-label="Chọn ảnh trong album"></div>
+    </div>
+
+    <div class="rsvp-modal" id="rsvpModal" aria-hidden="true">
+      <div class="rsvp-dialog" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
+        <button class="rsvp-close" id="closeRsvp" type="button" aria-label="Đóng xác nhận">
+          <i data-lucide="x"></i>
+        </button>
+        <h3 id="rsvpTitle">Xác nhận tham dự</h3>
+        <p>Sự hiện diện của bạn là niềm vinh hạnh cho gia đình chúng tôi. Xin xác nhận để chúng tôi chuẩn bị chu đáo nhất cho bạn.</p>
+        <form id="rsvpForm">
+          <label class="rsvp-field">
+            <span>Tên của bạn</span>
+            <input id="rsvpName" name="rsvpName" placeholder="Nhập tên của bạn" autocomplete="name" required />
+          </label>
+          <div class="rsvp-options" role="radiogroup" aria-label="Bạn sẽ đến chứ?">
+            <label class="rsvp-option">
+              <input type="radio" name="attendance" value="yes" checked />
+              <span><i data-lucide="check"></i></span>
+              <strong>Tôi sẽ đến</strong>
+            </label>
+            <label class="rsvp-option">
+              <input type="radio" name="attendance" value="no" />
+              <span><i data-lucide="x"></i></span>
+              <strong>Rất tiếc, tôi không thể đến</strong>
+            </label>
+          </div>
+          <button class="primary-button rsvp-submit" type="submit">
+            <span>Gửi xác nhận</span>
+          </button>
+          <p class="rsvp-status" id="rsvpStatus" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../script-th.js"></script>
+  </body>
+</html>
