@@ -1,55 +1,55 @@
-const wedding = {
+﻿const wedding = {
   invitationSide: "Tr",
-  groom: "Hữu Thắng",
+  groom: "H盻ｯu Th蘯ｯng",
   bride: "Thu Trang",
   dateISO: "2026-11-13T09:00:00+07:00",
   ceremonyISO: "2026-11-13T09:00:00+07:00",
-  displayDate: "13 tháng 11, 2026",
+  displayDate: "13 thﾃ｡ng 11, 2026",
   ceremonyHour: "09:00",
   partyTime: "09:00",
   day: "13",
   month: "11",
   year: "2026",
-  address: "thôn Ấp Giáo, xã Vĩnh Hải, thành phố Hải Phòng",
+  address: "thﾃｴn 蘯､p Giﾃ｡o, xﾃ｣ Vﾄｩnh H蘯｣i, thﾃnh ph盻・H蘯｣i Phﾃｲng",
   mapUrl: "https://maps.app.goo.gl/WYMqWyaiVoQQLs1M6",
   mapEmbedUrl:
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d846.2249474714474!2d106.48020222626349!3d20.6429102359104!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135f5e2b65295b1%3A0x8c740e574d1ab8f2!2zw4FvIETDoGkgVGjhu51pIFRyYW5nIEzGsHUgVGjhuqFuaA!5e1!3m2!1sen!2s!4v1781679031487!5m2!1sen!2s",
   calendarUrl:
-    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Tiệc%20cưới%20Hữu%20Thắng%20%26%20Thu%20Trang&dates=20261220T040000Z/20261220T070000Z&details=Trân%20trọng%20kính%20mời%20bạn%20đến%20chung%20vui&location=The%20Silk%20Garden%2C%20TP.%20Hồ%20Chí%20Minh",
+    "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Ti盻㌘%20cﾆｰ盻嬖%20H盻ｯu%20Th蘯ｯng%20%26%20Thu%20Trang&dates=20261220T040000Z/20261220T070000Z&details=Trﾃ｢n%20tr盻肱g%20kﾃｭnh%20m盻拱%20b蘯｡n%20ﾄ黛ｺｿn%20chung%20vui&location=The%20Silk%20Garden%2C%20TP.%20H盻・20Chﾃｭ%20Minh",
   phone: "tel:+84901234567",
-  groomParents: ["Đoàn Văn Lưu", "Phạm Thị Thạnh"],
-  brideParents: ["Phạm Văn Trung", "Bùi Thị Chẵn"],
-  groomAddress: "25 Lê Lợi, Minh Khai, Hồng Bàng, Hải Phòng",
-  brideAddress: "76 Điện Biên Phủ, Hồng Bàng, Hải Phòng",
+  groomParents: ["ﾄ塵ﾃn Vﾄハ Lﾆｰu", "Ph蘯｡m Th盻・Th蘯｡nh"],
+  brideParents: ["Ph蘯｡m Vﾄハ Trung", "Bﾃｹi Th盻・Ch蘯ｵn"],
+  groomAddress: "25 Lﾃｪ L盻｣i, Minh Khai, H盻渡g Bﾃng, H蘯｣i Phﾃｲng",
+  brideAddress: "76 ﾄ進盻㌻ Biﾃｪn Ph盻ｧ, H盻渡g Bﾃng, H蘯｣i Phﾃｲng",
   photos: [
-    { src: "assets/couple-photo.png", alt: "Ảnh cưới của cô dâu chú rể" },
-    { src: "assets/couple-photo.png", alt: "Khoảnh khắc cưới của cô dâu chú rể" },
-    { src: "assets/couple-photo.png", alt: "Album ảnh cưới" },
-    { src: "assets/couple-photo.png", alt: "Ảnh cưới lãng mạn" },
-    { src: "assets/couple-photo.png", alt: "Ảnh cưới trong studio" },
-    { src: "assets/couple-photo.png", alt: "Ảnh cưới ngoài trời" },
-    { src: "assets/couple-photo.png", alt: "Khoảnh khắc hạnh phúc" },
-    { src: "assets/couple-photo.png", alt: "Ảnh kỷ niệm ngày cưới" },
+    { src: "/assets/couple-photo.png", alt: "Anh cuoi 1" },
+    { src: "/assets/couple-photo.png", alt: "Anh cuoi 2" },
+    { src: "/assets/couple-photo.png", alt: "Anh cuoi 3" },
+    { src: "/assets/couple-photo.png", alt: "Anh cuoi 4" },
+    { src: "/assets/couple-photo.png", alt: "Anh cuoi 5" },
+    { src: "/assets/couple-photo.png", alt: "Anh cuoi 6" },
+    { src: "/assets/couple-photo.png", alt: "Anh cuoi 7" },
+    { src: "/assets/couple-photo.png", alt: "Anh cuoi 8" },
   ],
   timeline: [
-    { time: "09:00", title: "Đón khách" },
-    { time: "09:30", title: "Khai tiệc" },
-    { time: "12:00", title: "Đón dâu" },
-    { time: "12:50", title: "Tiệc mừng" },
-    { time: "14:00", title: "Kết thúc tiệc" },
+    { time: "09:00", title: "ﾄ静ｳn khﾃ｡ch" },
+    { time: "09:30", title: "Khai ti盻㌘" },
+    { time: "12:00", title: "ﾄ静ｳn dﾃ｢u" },
+    { time: "12:50", title: "Ti盻㌘ m盻ｫng" },
+    { time: "14:00", title: "K蘯ｿt thﾃｺc ti盻㌘" },
   ],
   gifts: {
     groom: {
-      name: "Chú rể Hữu Thắng",
+      name: "Chﾃｺ r盻・H盻ｯu Th蘯ｯng",
       bank: "MB Bank - 0123456789",
       qrImage: "",
-      qrData: "Mừng cưới chú rể Hữu Thắng - MB Bank 0123456789",
+      qrData: "M盻ｫng cﾆｰ盻嬖 chﾃｺ r盻・H盻ｯu Th蘯ｯng - MB Bank 0123456789",
     },
     bride: {
-      name: "Cô dâu Thu Trang",
+      name: "Cﾃｴ dﾃ｢u Thu Trang",
       bank: "Vietcombank - 0987654321",
       qrImage: "",
-      qrData: "Mừng cưới cô dâu Thu Trang - Vietcombank 0987654321",
+      qrData: "M盻ｫng cﾆｰ盻嬖 cﾃｴ dﾃ｢u Thu Trang - Vietcombank 0987654321",
     },
   },
 };
@@ -83,8 +83,8 @@ function setMusicPlaybackState(isPlaying) {
   player.classList.remove("is-visible");
   iframe.src = isPlaying ? iframe.dataset.src : "about:blank";
   button.classList.toggle("is-playing", isPlaying);
-  button.setAttribute("aria-label", isPlaying ? "Tạm dừng nhạc" : "Bật nhạc");
-  button.setAttribute("title", isPlaying ? "Tạm dừng nhạc" : "Bật nhạc");
+  button.setAttribute("aria-label", isPlaying ? "T蘯｡m d盻ｫng nh蘯｡c" : "B蘯ｭt nh蘯｡c");
+  button.setAttribute("title", isPlaying ? "T蘯｡m d盻ｫng nh蘯｡c" : "B蘯ｭt nh蘯｡c");
   button.innerHTML = `<i data-lucide="${isPlaying ? "pause" : "music"}"></i>`;
   refreshIcons();
 }
@@ -119,7 +119,7 @@ function fillCalendar() {
   ].join("");
 
   $("#calendar").innerHTML = `
-    <div class="calendar__month">Tháng ${wedding.month} / ${wedding.year}</div>
+    <div class="calendar__month">Thﾃ｡ng ${wedding.month} / ${wedding.year}</div>
     <div class="calendar__week">${days.map((day) => `<span>${day}</span>`).join("")}</div>
     <div class="calendar__days">${cells}</div>
   `;
@@ -134,7 +134,7 @@ function setupCountdown() {
   const render = () => {
     const remaining = target - Date.now();
     if (remaining <= 0) {
-      element.textContent = "Đã đến ngày vui";
+      element.textContent = "ﾄ静｣ ﾄ黛ｺｿn ngﾃy vui";
       return;
     }
 
@@ -143,12 +143,12 @@ function setupCountdown() {
     const hours = Math.floor((totalSeconds % 86400) / 3600);
     const minutes = Math.floor((totalSeconds % 3600) / 60);
     const seconds = totalSeconds % 60;
-    element.setAttribute("aria-label", `${days} ngày ${hours} giờ ${minutes} phút ${seconds} giây`);
+    element.setAttribute("aria-label", `${days} ngay ${hours} gio ${minutes} phut ${seconds} giay`);
     element.innerHTML = [
-      { value: days, label: "Ngày" },
-      { value: hours, label: "Giờ" },
-      { value: minutes, label: "Phút" },
-      { value: seconds, label: "Giây" },
+      { value: days, label: "Ngay" },
+      { value: hours, label: "Gio" },
+      { value: minutes, label: "Phut" },
+      { value: seconds, label: "Giay" },
     ]
       .map(
         (item) => `
@@ -167,7 +167,7 @@ function setupCountdown() {
 
 function fillContent() {
   const names = `${wedding.groom} & ${wedding.bride}`;
-  document.title = `Thiệp cưới ${names}`;
+  document.title = `Thi盻㎝ cﾆｰ盻嬖 ${names}`;
   $("#coverNames").innerHTML = namesWithBreak();
   $("#heroNames").innerHTML = namesWithBreak();
   $("#announcementNames").innerHTML = namesWithBreak();
@@ -247,7 +247,7 @@ function setupAlbumLightbox() {
   const update = () => {
     const photo = wedding.photos[activeIndex];
     activeImage.src = photo.src;
-    activeImage.alt = photo.alt || `Ảnh cưới ${activeIndex + 1}`;
+    activeImage.alt = photo.alt || `蘯｢nh cﾆｰ盻嬖 ${activeIndex + 1}`;
     counter.textContent = `${activeIndex + 1} / ${wedding.photos.length}`;
     thumbButtons.forEach((button, index) => {
       const isActive = index === activeIndex;
@@ -332,13 +332,13 @@ async function setupWishes() {
         `,
       )
       .join("")
-      : `<article class="wish-item"><p>Hãy là người đầu tiên gửi lời chúc đến cô dâu chú rể.</p></article>`;
+      : `<article class="wish-item"><p>Hﾃ｣y lﾃ ngﾆｰ盻拱 ﾄ黛ｺｧu tiﾃｪn g盻ｭi l盻拱 chﾃｺc ﾄ黛ｺｿn cﾃｴ dﾃ｢u chﾃｺ r盻・</p></article>`;
   };
 
   if (saved.length === 0) {
     saved.push(
-      { name: "Bạn thân", time: "20.04.2026", text: "Chúc hai bạn trăm năm hạnh phúc." },
-      { name: "Đồng nghiệp", time: "20.04.2026", text: "Chúc ngày vui thật trọn vẹn và ấm áp." },
+      { name: "B蘯｡n thﾃ｢n", time: "20.04.2026", text: "Chﾃｺc hai b蘯｡n trﾄノ nﾄノ h蘯｡nh phﾃｺc." },
+      { name: "ﾄ雪ｻ渡g nghi盻㎝", time: "20.04.2026", text: "Chﾃｺc ngﾃy vui th蘯ｭt tr盻肱 v蘯ｹn vﾃ 蘯･m ﾃ｡p." },
     );
   }
 
@@ -353,7 +353,7 @@ async function setupWishes() {
       .limit(30);
 
     if (error) {
-      console.warn("Không thể tải sổ lưu bút từ Supabase:", error.message);
+      console.warn("Khﾃｴng th盻・t蘯｣i s盻・lﾆｰu bﾃｺt t盻ｫ Supabase:", error.message);
       return;
     }
 
@@ -380,7 +380,7 @@ async function setupWishes() {
     if (db) {
       const { error } = await db.from(WISH_TABLE).insert({ name, message: text });
       if (error) {
-        console.warn("Không thể gửi lời chúc lên Supabase:", error.message);
+        console.warn("Khﾃｴng th盻・g盻ｭi l盻拱 chﾃｺc lﾃｪn Supabase:", error.message);
         return;
       }
       await loadFromSupabase();
@@ -435,7 +435,7 @@ function setupRsvp() {
     const attendance = form.elements.attendance.value;
     if (!name) return;
 
-    status.textContent = "Đang gửi xác nhận...";
+    status.textContent = "ﾄ紳ng g盻ｭi xﾃ｡c nh蘯ｭn...";
     status.classList.remove("is-error");
     submitButton.disabled = true;
     submitButton.classList.add("is-loading");
@@ -456,8 +456,8 @@ function setupRsvp() {
       });
 
       if (error) {
-        console.warn("Không thể gửi xác nhận lên Supabase:", error.message);
-        status.textContent = "Chưa gửi được lên database. Vui lòng kiểm tra bảng wedding_rsvps trong Supabase.";
+        console.warn("Khﾃｴng th盻・g盻ｭi xﾃ｡c nh蘯ｭn lﾃｪn Supabase:", error.message);
+        status.textContent = "Chﾆｰa g盻ｭi ﾄ柁ｰ盻｣c lﾃｪn database. Vui lﾃｲng ki盻ノ tra b蘯｣ng wedding_rsvps trong Supabase.";
         status.classList.add("is-error");
         submitButton.disabled = false;
         submitButton.classList.remove("is-loading");
@@ -469,7 +469,7 @@ function setupRsvp() {
       localStorage.setItem("wedding-rsvps", JSON.stringify(saved.slice(0, 30)));
     }
 
-    status.textContent = "Cảm ơn bạn, xác nhận đã được ghi nhận.";
+    status.textContent = "C蘯｣m ﾆ｡n b蘯｡n, xﾃ｡c nh蘯ｭn ﾄ妥｣ ﾄ柁ｰ盻｣c ghi nh蘯ｭn.";
     form.reset();
     form.elements.attendance.value = "yes";
     submitButton.disabled = false;
