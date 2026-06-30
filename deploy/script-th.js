@@ -41,15 +41,15 @@
   gifts: {
     groom: {
       name: "Chú rể Hữu Thắng",
-      bank: "MB Bank - 0123456789",
-      qrImage: "",
-      qrData: "Mừng cưới chú rể Hữu Thắng - MB Bank 0123456789",
+      bank: "BIDV - 1440250946",
+      qrImage: "../assets/qr-groom-bidv.jpeg",
+      qrData: "Mừng cưới chú rể Hữu Thắng - BIDV 1440250946",
     },
     bride: {
       name: "Cô dâu Thu Trang",
-      bank: "Vietcombank - 0987654321",
-      qrImage: "",
-      qrData: "Mừng cưới cô dâu Thu Trang - Vietcombank 0987654321",
+      bank: "Vietcombank - 9979652684",
+      qrImage: "../assets/qr-bride-vietcombank.jpeg",
+      qrData: "Mừng cưới cô dâu Thu Trang - Vietcombank 9979652684",
     },
   },
 };
