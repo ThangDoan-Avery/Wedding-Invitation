@@ -1,2 +1,76 @@
 [build]
   publish = "deploy"
+
+[[redirects]]
+  from = "/Wedding_invitation_Thang"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/Wedding_invitation_Thang/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/wedding_invitation_thang"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/wedding_invitation_thang/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/Wedding_invitation_Trang"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/Wedding_invitation_Trang/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/wedding_invitation_trang"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/wedding_invitation_trang/index.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/Wedding_invitation_Th.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/Wedding_invitation_Tr.html"
+  to = "/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/guest=*"
+  to = "/index.html"
+  status = 200
+  force = true
+
+[[headers]]
+  for = "/*"
+
+  [headers.values]
+    Referrer-Policy = "no-referrer"
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
