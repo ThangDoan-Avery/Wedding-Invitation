@@ -58,9 +58,7 @@ const LOCAL_RSVPS_KEY = "wedding-rsvps-v2";
 const CONTROL_CHARACTERS = /[\u0000-\u001F\u007F-\u009F\u202A-\u202E\u2066-\u2069]/gu;
 const COUNTDOWN_UNITS = ["days", "hours", "minutes", "seconds"];
 const RSVP_GUEST_COUNTS = new Set(Array.from({ length: 10 }, (_, index) => String(index + 1)));
-// The linked Zing embed currently shows a promo card without playback controls.
-// Use the same studio recording supplied on Duc Phuc's official YouTube channel.
-const MUSIC_EMBED_URL = "https://www.youtube.com/embed/-GgTYmhzviw?enablejsapi=1&playsinline=1&rel=0";
+const MUSIC_TRACK_LABEL = "Ánh Nắng Của Anh – Đức Phúc";
 
 let supabaseClient;
 
@@ -790,147 +788,200 @@ function setupMusic() {
   const controls = select("#musicControls");
   const toggle = select("#musicToggle");
   const label = select("#musicToggleLabel");
-  const panel = select("#musicPanel");
-  const host = select("#musicEmbedHost");
-  const closeButton = select("#closeMusic");
   const status = select("#musicStatus");
-  if (!controls || !toggle || !label || !panel || !host || !closeButton || !status) return;
+  const audio = select("#weddingAudio");
+  if (!controls || !toggle || !label || !status || !audio) return;
 
-  let isPlayerEnabled = false;
-  let loadTimeout = null;
-  let player = null;
-  let playerApi = null;
+  let state = "off";
+  let wantsPlayback = false;
+  let hasUserStopped = false;
+  let hasUsedGestureRetry = false;
   let requestId = 0;
+  let gestureRetryArmed = false;
 
-  const loadPlayerApi = () => {
-    if (window.YT?.Player) return Promise.resolve(window.YT);
-    if (playerApi) return playerApi;
+  const isToggleTarget = (target) => target instanceof Node && toggle.contains(target);
 
-    playerApi = new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://www.youtube.com/iframe_api";
-      script.async = true;
-      let apiTimeout;
-      const failed = () => {
-        window.clearTimeout(apiTimeout);
-        script.remove();
-        playerApi = null;
-        reject(new Error("YouTube player API unavailable"));
-      };
-      window.onYouTubeIframeAPIReady = () => {
-        window.clearTimeout(apiTimeout);
-        resolve(window.YT);
-      };
-      script.addEventListener("error", failed, { once: true });
-      apiTimeout = window.setTimeout(failed, 15000);
-      document.head.append(script);
-    });
-    return playerApi;
+  const isEditableTarget = (target) => target instanceof Element
+    && Boolean(target.closest("input, textarea, select, [contenteditable]:not([contenteditable='false'])"));
+
+  const handleGestureRetry = (event) => {
+    if (!event.isTrusted || !gestureRetryArmed || select("dialog[open]") || isToggleTarget(event.target)) return;
+    if (event.type === "keydown") {
+      if (
+        event.repeat
+        || event.isComposing
+        || event.ctrlKey
+        || event.altKey
+        || event.metaKey
+        || ["Escape", "Tab", "Shift", "Control", "Alt", "Meta"].includes(event.key)
+        || isEditableTarget(event.target)
+      ) return;
+    }
+
+    disarmGestureRetry();
+    hasUsedGestureRetry = true;
+    startPlayback({ allowGestureFallback: false });
   };
 
-  const updateToggle = () => {
-    toggle.classList.toggle("is-enabled", isPlayerEnabled);
-    toggle.setAttribute("aria-pressed", String(isPlayerEnabled));
-    toggle.setAttribute("aria-expanded", String(isPlayerEnabled));
-    toggle.setAttribute("aria-label", `${isPlayerEnabled ? "Tắt" : "Bật"} nhạc: Ánh Nắng Của Anh – Đức Phúc`);
-    label.textContent = isPlayerEnabled ? "Tắt nhạc" : "Bật nhạc";
+  const armGestureRetry = () => {
+    if (hasUsedGestureRetry || hasUserStopped) return;
+    if (gestureRetryArmed) return;
+    gestureRetryArmed = true;
+    document.addEventListener("pointerup", handleGestureRetry, true);
+    document.addEventListener("click", handleGestureRetry, true);
+    document.addEventListener("keydown", handleGestureRetry, true);
   };
 
-  const disablePlayer = (returnFocus = false) => {
+  function disarmGestureRetry() {
+    if (!gestureRetryArmed) return;
+    gestureRetryArmed = false;
+    document.removeEventListener("pointerup", handleGestureRetry, true);
+    document.removeEventListener("click", handleGestureRetry, true);
+    document.removeEventListener("keydown", handleGestureRetry, true);
+  }
+
+  const setState = (nextState, message) => {
+    state = nextState;
+    const playbackRequested = state === "loading" || state === "playing";
+    controls.dataset.state = state;
+    toggle.classList.toggle("is-enabled", playbackRequested);
+    toggle.setAttribute("aria-pressed", String(playbackRequested));
+    const actionLabel = `${playbackRequested ? "Tắt" : "Bật"} nhạc: ${MUSIC_TRACK_LABEL}`;
+    toggle.setAttribute("aria-label", actionLabel);
+    toggle.title = actionLabel;
+    label.textContent = state === "loading" ? "Đang tải…" : playbackRequested ? "Tắt nhạc" : "Bật nhạc";
+    status.textContent = message;
+  };
+
+  const stopPlayback = ({ userInitiated = false, message = "Nhạc đã tắt." } = {}) => {
+    if (userInitiated) {
+      hasUserStopped = true;
+      hasUsedGestureRetry = true;
+    }
     requestId += 1;
-    isPlayerEnabled = false;
-    window.clearTimeout(loadTimeout);
-    loadTimeout = null;
+    wantsPlayback = false;
+    disarmGestureRetry();
     try {
-      player?.destroy();
+      audio.pause();
     } catch {
-      // Removing the frame below also stops the player if its API is unavailable.
+      // State below remains truthful even if a damaged media element rejects pause().
     }
-    player = null;
-    // Removing the cross-origin player stops its audio; hiding it alone does not.
-    host.replaceChildren();
-    panel.hidden = true;
-    status.textContent = "";
-    updateToggle();
-    if (returnFocus) toggle.focus({ preventScroll: true });
+    setState("off", message);
   };
 
-  const enablePlayer = () => {
-    if (isPlayerEnabled) return;
-    isPlayerEnabled = true;
+  const mediaErrorMessage = () => {
+    if (audio.error?.code === 2) return "Không tải được nhạc. Nhấn Bật nhạc để thử lại.";
+    if (audio.error?.code === 3 || audio.error?.code === 4) {
+      return "Trình duyệt chưa phát được tệp nhạc này. Nhấn Bật nhạc để thử lại.";
+    }
+    return "Chưa phát được nhạc. Nhấn Bật nhạc để thử lại.";
+  };
+
+  const handlePlayFailure = (error, activeRequest, allowGestureFallback) => {
+    if (activeRequest !== requestId || !wantsPlayback || state === "playing") return;
+    wantsPlayback = false;
+
+    if (error?.name === "NotAllowedError") {
+      setState(
+        "blocked",
+        allowGestureFallback
+          ? "Trình duyệt đã chặn tự phát. Hãy chạm vào trang hoặc nhấn Bật nhạc."
+          : "Trình duyệt chưa cho phát nhạc. Nhấn Bật nhạc để thử lại.",
+      );
+      if (allowGestureFallback) armGestureRetry();
+      return;
+    }
+
+    disarmGestureRetry();
+    setState("error", mediaErrorMessage());
+  };
+
+  function startPlayback({ allowGestureFallback = false, retryAfterError = false } = {}) {
+    disarmGestureRetry();
+    hasUserStopped = false;
+    wantsPlayback = true;
     const activeRequest = ++requestId;
-    const isCurrentRequest = () => isPlayerEnabled && activeRequest === requestId;
-    panel.hidden = false;
-    status.textContent = "Đang mở trình phát nhạc…";
-    updateToggle();
+    setState("loading", "Đang tải và thử phát nhạc…");
 
-    const frame = document.createElement("iframe");
-    frame.title = "Ánh Nắng Của Anh (Chờ Em Đến Ngày Mai OST) – Đức Phúc, bản thu chính thức";
-    frame.allow = "autoplay; encrypted-media";
-    // YouTube requires a referrer. Send the site origin only, never the guest query.
-    frame.referrerPolicy = "strict-origin-when-cross-origin";
-    const embedUrl = new URL(MUSIC_EMBED_URL);
-    if (window.location.protocol === "http:" || window.location.protocol === "https:") {
-      embedUrl.searchParams.set("origin", window.location.origin);
+    if (retryAfterError) {
+      try {
+        audio.load();
+      } catch (error) {
+        handlePlayFailure(error, activeRequest, false);
+        return;
+      }
     }
-    frame.src = embedUrl.toString();
-    frame.addEventListener("load", () => {
-      if (!isCurrentRequest() || !frame.isConnected) return;
-      // An iframe load does not tell us whether playback actually started.
-      status.textContent = "Nếu nhạc chưa tự phát, hãy nhấn Play trong trình phát.";
-    });
-    host.replaceChildren(frame);
-    loadTimeout = window.setTimeout(() => {
-      if (!isCurrentRequest() || !frame.isConnected) return;
-      status.textContent = "Nếu khung nhạc chưa tải được, bạn có thể mở bài hát từ liên kết bên dưới.";
-    }, 12000);
 
-    void loadPlayerApi().then((api) => {
-      if (!isCurrentRequest() || !frame.isConnected) return;
-      player = new api.Player(frame, {
-        events: {
-          onReady: (event) => {
-            if (!isCurrentRequest()) return;
-            window.clearTimeout(loadTimeout);
-            loadTimeout = null;
-            status.textContent = "Nếu nhạc chưa tự phát, hãy nhấn Play trong trình phát.";
-            event.target.playVideo();
-          },
-          onStateChange: (event) => {
-            if (!isCurrentRequest()) return;
-            if (event.data === api.PlayerState.PLAYING) status.textContent = "Đang phát Ánh Nắng Của Anh – Đức Phúc.";
-            if (event.data === api.PlayerState.PAUSED) status.textContent = "Nhạc đang tạm dừng. Nhấn Play để nghe tiếp.";
-            if (event.data === api.PlayerState.ENDED) status.textContent = "Bài hát đã kết thúc. Nhấn Play để nghe lại.";
-          },
-          onAutoplayBlocked: () => {
-            if (isCurrentRequest()) status.textContent = "Chạm nút Play trong trình phát để bắt đầu nghe nhạc.";
-          },
-          onError: () => {
-            if (!isCurrentRequest()) return;
-            window.clearTimeout(loadTimeout);
-            loadTimeout = null;
-            status.textContent = "Bài hát chưa phát được trong khung này. Bạn có thể nghe qua liên kết bên dưới.";
-          },
-        },
-      });
-    }).catch(() => {
-      if (!isCurrentRequest()) return;
-      status.textContent = "Bạn có thể nhấn Play trong khung nhạc hoặc mở bài hát từ liên kết bên dưới.";
-    });
-  };
+    let playResult;
+    try {
+      playResult = audio.play();
+    } catch (error) {
+      handlePlayFailure(error, activeRequest, allowGestureFallback);
+      return;
+    }
+
+    if (playResult && typeof playResult.catch === "function") {
+      void playResult.catch((error) => handlePlayFailure(error, activeRequest, allowGestureFallback));
+    }
+  }
+
+  audio.addEventListener("playing", () => {
+    if (!wantsPlayback || audio.paused) {
+      if (!audio.paused) {
+        try {
+          audio.pause();
+        } catch {
+          // A late playing event must never resurrect explicitly stopped music.
+        }
+      }
+      return;
+    }
+    disarmGestureRetry();
+    setState("playing", `Đang phát ${MUSIC_TRACK_LABEL}.`);
+  });
+
+  audio.addEventListener("waiting", () => {
+    if (wantsPlayback) setState("loading", "Đang tải nhạc…");
+  });
+
+  audio.addEventListener("stalled", () => {
+    if (wantsPlayback) setState("loading", "Kết nối chậm, đang tải nhạc…");
+  });
+
+  audio.addEventListener("pause", () => {
+    if (wantsPlayback && audio.paused) {
+      requestId += 1;
+      wantsPlayback = false;
+      disarmGestureRetry();
+      setState("off", "Nhạc đã tạm dừng.");
+    }
+  });
+
+  audio.addEventListener("error", () => {
+    if (hasUserStopped && !wantsPlayback) return;
+    requestId += 1;
+    wantsPlayback = false;
+    disarmGestureRetry();
+    setState("error", mediaErrorMessage());
+  });
 
   toggle.addEventListener("click", () => {
-    if (isPlayerEnabled) disablePlayer();
-    else enablePlayer();
+    if (state === "loading" || state === "playing") {
+      stopPlayback({ userInitiated: true });
+      return;
+    }
+
+    hasUsedGestureRetry = true;
+    startPlayback({ retryAfterError: state === "error" });
   });
-  closeButton.addEventListener("click", () => disablePlayer(true));
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || !isPlayerEnabled || select("dialog[open]")) return;
-    disablePlayer(true);
+
+  window.addEventListener("pagehide", () => {
+    hasUserStopped = true;
+    stopPlayback({ message: "" });
   });
-  window.addEventListener("pagehide", () => disablePlayer());
+
   controls.hidden = false;
-  updateToggle();
+  startPlayback({ allowGestureFallback: true });
 }
 
 function setupRevealAnimations() {

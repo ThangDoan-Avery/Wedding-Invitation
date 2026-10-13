@@ -55,10 +55,10 @@
 
       <section class="template-hero" aria-labelledby="heroTitle">
         <img
-          src="/assets/couple-photo.png"
+          src="/assets/anh1.jpeg"
           alt="Hữu Thắng và Thu Trang trong ngày cưới"
-          width="1024"
-          height="1536"
+          width="4672"
+          height="7008"
           fetchpriority="high"
         >
         <div class="template-hero__shade" aria-hidden="true"></div>
@@ -110,10 +110,10 @@
         </p>
         <figure class="announcement__photo">
           <img
-            src="/assets/couple-photo.png"
+            src="/assets/anh2.jpeg"
             alt="Ảnh cưới Hữu Thắng và Thu Trang"
-            width="1024"
-            height="1536"
+            width="4672"
+            height="7008"
             loading="lazy"
           >
         </figure>
@@ -255,10 +255,10 @@
       <section class="invitation-scene" id="invitationScene" aria-labelledby="sceneTitle" data-reveal="up">
         <img
           class="invitation-scene__photo"
-          src="/assets/couple-photo.png"
+          src="/assets/anh3.jpeg"
           alt="Hữu Thắng và Thu Trang bên nhau"
-          width="1024"
-          height="1536"
+          width="4672"
+          height="7008"
           loading="lazy"
         >
         <div class="invitation-scene__letter">
@@ -284,10 +284,10 @@
         <figure class="story-frame story-frame--first" data-reveal="left">
           <button type="button" data-photo-open aria-label="Mở ảnh cưới thứ nhất">
             <img
-              src="/assets/couple-photo.png"
+              src="/assets/anh4.jpeg"
               alt="Khoảnh khắc Hữu Thắng và Thu Trang bên nhau"
-              width="1024"
-              height="1536"
+              width="4672"
+              height="7008"
               loading="lazy"
             >
           </button>
@@ -297,10 +297,10 @@
         <figure class="story-frame story-frame--second" data-reveal="right">
           <button type="button" data-photo-open aria-label="Mở ảnh cưới thứ hai">
             <img
-              src="/assets/couple-photo.png"
-              alt="Cô dâu chú rể trong khu vườn ngày cưới"
-              width="1024"
-              height="1536"
+              src="/assets/anh5.jpeg"
+              alt="Hữu Thắng và Thu Trang trong bộ ảnh cưới"
+              width="4672"
+              height="7008"
               loading="lazy"
             >
           </button>
@@ -315,10 +315,10 @@
       <section class="rsvp-stage" id="rsvp">
         <div class="rsvp-stage__photo" data-reveal="up">
           <img
-            src="/assets/couple-photo.png"
+            src="/assets/anh6.jpeg"
             alt="Ảnh cưới Hữu Thắng và Thu Trang"
-            width="1024"
-            height="1536"
+            width="3928"
+            height="5892"
             loading="lazy"
           >
         </div>
@@ -469,10 +469,10 @@
 
       <section class="closing-photo" id="thankYou" data-reveal="up">
         <img
-          src="/assets/couple-photo.png"
+          src="/assets/anh7.jpeg"
           alt="Hữu Thắng và Thu Trang"
-          width="1024"
-          height="1536"
+          width="4672"
+          height="7008"
           loading="lazy"
         >
         <div class="closing-photo__shade" aria-hidden="true"></div>
@@ -488,38 +488,34 @@
       </section>
     </main>
 
+    <div class="falling-hearts" id="fallingHearts" aria-hidden="true" hidden></div>
+    <button
+      class="hearts-toggle"
+      id="heartsToggle"
+      type="button"
+      aria-label="Tắt hiệu ứng trái tim"
+      aria-pressed="true"
+      title="Tắt hiệu ứng trái tim"
+      hidden
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 21S3 15.7 3 8.8C3 3.4 9.5 2 12 6.1 14.5 2 21 3.4 21 8.8 21 15.7 12 21 12 21Z"></path>
+        <path class="hearts-toggle__slash" d="m4 3 16 18"></path>
+      </svg>
+    </button>
+
+    <audio id="weddingAudio" src="/assets/Anh-nang-cua-anh.mp3" preload="metadata" loop hidden></audio>
     <div class="music-controls" id="musicControls" hidden>
-      <section class="music-panel" id="musicPanel" aria-labelledby="musicTitle" hidden>
-        <header class="music-panel__header">
-          <div>
-            <h2 id="musicTitle">Ánh Nắng Của Anh</h2>
-            <p>Đức Phúc · Bản thu chính thức</p>
-          </div>
-          <button id="closeMusic" class="music-panel__close" type="button" aria-label="Tắt nhạc và đóng trình phát">×</button>
-        </header>
-        <div class="music-panel__embed" id="musicEmbedHost"></div>
-        <p class="music-panel__hint" id="musicStatus" role="status" aria-live="polite"></p>
-        <a
-          class="music-panel__link"
-          href="https://www.youtube.com/watch?v=-GgTYmhzviw"
-          target="_blank"
-          rel="noopener noreferrer"
-        >Nghe trên YouTube ↗</a>
-        <a
-          class="music-panel__link"
-          href="https://zingmp3.vn/bai-hat/Anh-Nang-Cua-Anh-Cho-Em-Den-Ngay-Mai-OST-Duc-Phuc/m7cEYB3NQrU9.html"
-          target="_blank"
-          rel="noopener noreferrer"
-        >Nghe trên Zing MP3 ↗</a>
-      </section>
+      <p class="music-status" id="musicStatus" role="status" aria-live="polite"></p>
       <button
         class="music-toggle"
         id="musicToggle"
         type="button"
         aria-label="Bật nhạc: Ánh Nắng Của Anh – Đức Phúc"
         aria-pressed="false"
-        aria-expanded="false"
-        aria-controls="musicPanel"
+        aria-controls="weddingAudio"
+        aria-describedby="musicStatus"
+        title="Ánh Nắng Của Anh – Đức Phúc"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M9 18V5l12-2v13M9 9l12-2"></path>
@@ -592,5 +588,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="/app.js" defer></script>
+    <script src="/hearts.js" defer></script>
   </body>
 </html>

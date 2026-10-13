@@ -35,8 +35,10 @@ https://tntweddinginvitation.netlify.app/?guest=B%E1%BA%A1n+Th%E1%BA%AFng+A3
 deploy/
   index.html
   app.js
+  hearts.js
   styles.css
   assets/
+    Anh-nang-cua-anh.mp3
 netlify.toml
 supabase-wishes.sql
 ```
@@ -53,11 +55,15 @@ Nhấn vào hộp quà để mở popup “Hộp Quà Yêu Thương”: hai cộ
 
 Các file `qr-groom-bidv.svg` và `qr-bride-vietcombank.svg` được tạo từ dữ liệu giải mã của hai JPEG gốc, giữ nguyên từng byte của mã chuyển khoản và vùng trắng 4 module. Đã đối chiếu payload sau khi render trên trình duyệt ở kích thước mobile; hai JPEG gốc vẫn được giữ trong `deploy/assets/`.
 
-Nhạc cưới là [Ánh Nắng Của Anh (Chờ Em Đến Ngày Mai OST) — Đức Phúc](https://zingmp3.vn/bai-hat/Anh-Nang-Cua-Anh-Cho-Em-Den-Ngay-Mai-OST-Duc-Phuc/m7cEYB3NQrU9.html). Kiểm tra ngày 13/10/2026: Zing embed của bài `ZW78BW9D` chỉ hiện thẻ giới thiệu, không có trình phát. Website dùng [bản thu chính thức trên kênh Đức Phúc](https://www.youtube.com/watch?v=-GgTYmhzviw) để phát trong thiệp, đồng thời giữ link Zing gốc trong khung nhạc.
+Nhạc cưới dùng file cục bộ `deploy/assets/Anh-nang-cua-anh.mp3` do người dùng cung cấp và đã có trong dự án. Tài liệu này không xác minh hoặc khẳng định quyền tác giả hay quyền phân phối của file. Tên file phân biệt chữ hoa/chữ thường khi triển khai, vì vậy cần giữ chính xác chữ `A` viết hoa trong `Anh-nang-cua-anh.mp3`.
 
-Nhạc mặc định tắt; iframe và YouTube IFrame API chỉ được tải sau khi khách nhấn Bật nhạc. Nếu tự phát bị chặn, khách nhấn Play trong khung nhạc. Nút Tắt nhạc hoặc dấu × gỡ iframe để dừng âm thanh; bật lại sẽ tải lại bài từ đầu. Iframe gửi referrer ở mức origin để đáp ứng yêu cầu YouTube, không gửi query tên khách. Trạng thái phát/tạm dừng được cập nhật từ sự kiện của YouTube; lỗi phát có thông báo và liên kết nghe trực tiếp.
+File hiện tại dài khoảng 50,2 giây và được phát lặp; có thể thay bằng bản đầy đủ cùng tên.
 
-Khi kiểm tra nhạc local, dùng `http://localhost:8000/` như hướng dẫn dưới. Đã xác minh bản thu phát trên origin `localhost`; YouTube có thể từ chối embed khi dùng địa chỉ IP `127.0.0.1`.
+Phần tử `<audio id="weddingAudio" preload="metadata" loop>` phát trực tiếp file MP3 nội bộ, không tạo iframe, không tải YouTube API và không gửi yêu cầu nhạc tới dịch vụ bên ngoài. Trang thử `play()` ngay khi khởi tạo; nếu trình duyệt chặn autoplay, tương tác chạm/nhấp tin cậy đầu tiên sẽ thử lại và giao diện hiển thị thông báo ngắn nếu vẫn bị chặn hoặc phát sinh lỗi. Nút nhạc nhỏ gọn dùng để tạm dừng và phát tiếp tại đúng `currentTime`, không tải lại từ đầu. Khi khách chủ động tắt nhạc, trạng thái tắt được giữ nguyên và các thao tác chạm tiếp theo không tự bật lại.
+
+Hiệu ứng trái tim tự chạy khi mở thiệp: 8 trái tim nhỏ màu hồng, rơi nhẹ trong phạm vi thiệp và không chặn thao tác. Nút hình tim góc dưới bên trái bật/tắt riêng hiệu ứng; số phần tử luôn giới hạn, không tăng dần khi để trang mở lâu. Khi đổi tab, hiệu ứng tạm dừng. Nếu thiết bị bật chế độ giảm chuyển động (`prefers-reduced-motion`), hiệu ứng và nút tim được ẩn. Mã hiệu ứng nằm trong `deploy/hearts.js`; hình tim SVG tự vẽ ở `deploy/assets/falling-heart.svg`.
+
+Khi kiểm tra nhạc local, dùng `http://localhost:8000/` như hướng dẫn dưới và xác nhận `/assets/Anh-nang-cua-anh.mp3` trả về thành công. Không mở trực tiếp `index.html` bằng `file://`.
 
 ## Chạy local
 
@@ -142,7 +148,7 @@ Repository hiện dùng nhánh `main`. Sau khi thay đổi đã được kiểm 
 
 ```powershell
 node --check deploy/app.js
-node --test tests/guest-name.test.cjs
+node --test tests/*.test.cjs
 python -m http.server 8000 --directory deploy
 ```
 
@@ -153,7 +159,8 @@ Kiểm tra tối thiểu:
 - `/?guest=...` vẫn hiển thị đúng tên để tương thích với link cũ.
 - Khi path và query cùng có tên, path thắng; tên rỗng hoặc malformed trở về `Quý khách`.
 - Countdown hiển thị bốn ô và đếm đúng tới 09:00 ngày 15/11/2026 (UTC+7).
-- Nhạc mặc định tắt; bật tạo đúng một iframe cho bản thu chính thức của Đức Phúc (`-GgTYmhzviw`), tắt gỡ iframe. Nếu bị chặn tự phát vẫn có nút Play và link mở trên YouTube hoặc Zing MP3.
+- `#weddingAudio` dùng đúng `/assets/Anh-nang-cua-anh.mp3`, `preload="metadata"` và `loop`; không tạo iframe hoặc gọi YouTube API. Trang thử phát ngay, sau đó dùng tương tác tin cậy đầu tiên làm fallback nếu autoplay bị chặn. Thông báo blocked/error hiển thị rõ; nút nhạc pause/resume giữ nguyên `currentTime`, còn thao tác tắt thủ công ngăn các lần tự bật lại sau đó.
+- Trái tim tự rơi, không cản nút/form; nút hình tim tắt/bật hiệu ứng. Đổi tab tạm dừng và chế độ giảm chuyển động ẩn hiệu ứng hoàn toàn.
 - Hai link bản đồ và hai link thêm lịch mở đúng địa điểm.
 - RSVP (gồm số lượng người) và lời chúc gửi thành công lên Supabase sau khi cập nhật schema.
 - QR ngân hàng quét đúng tên và số tài khoản.
