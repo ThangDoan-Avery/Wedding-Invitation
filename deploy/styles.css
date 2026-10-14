@@ -96,130 +96,97 @@ address {
   min-height: clamp(680px, 155vw, 775px);
   flex-direction: column;
   align-items: center;
-  padding: 32px clamp(24px, 8vw, 46px) 28px;
+  padding: 52px clamp(24px, 8vw, 46px) 36px;
   overflow: hidden;
-  border: 6px solid #eee6db;
-  border-radius: 0 0 30px 30px;
-  background:
-    linear-gradient(rgba(255, 253, 249, 0.78), rgba(255, 253, 249, 0.84)),
-    url("assets/silk-floral-bg.png") center / cover no-repeat;
-  color: #504640;
+  border: 8px solid #fff;
+  background: #f5f5f5;
+  color: #626262;
   text-align: center;
 }
 
-.opening-invitation::before,
-.opening-invitation::after {
+.opening-invitation::before {
   content: "";
   position: absolute;
+  inset: 12px;
   z-index: -1;
+  border: 1px solid rgba(97, 16, 16, 0.5);
+  border-radius: 2px;
   pointer-events: none;
-}
-
-.opening-invitation::before {
-  inset: 13px;
-  border: 1px solid rgba(168, 132, 84, 0.26);
-  border-radius: 22px;
-}
-
-.opening-invitation::after {
-  inset: 20px;
-  border: 1px dotted rgba(168, 132, 84, 0.11);
-  border-radius: 17px;
 }
 
 .opening-invitation__eyebrow {
   margin: 0;
-  color: var(--gold-soft);
+  color: var(--wine);
   font-family: var(--serif);
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.42em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
 }
 
-.opening-invitation__seal {
-  position: relative;
+.opening-invitation__names {
+  width: 100%;
+  margin: clamp(48px, 13vw, 66px) auto 0;
+}
+
+.opening-invitation__names h1 {
   display: grid;
-  width: min(290px, 78%);
-  aspect-ratio: 1;
-  place-items: center;
-  margin: clamp(76px, 17vw, 108px) auto 24px;
-  border: 1px solid rgba(168, 132, 84, 0.48);
-  border-radius: 50%;
-}
-
-.opening-invitation__seal::before,
-.opening-invitation__seal::after {
-  content: "";
-  position: absolute;
-  border: 1px solid rgba(168, 132, 84, 0.25);
-  border-radius: 50%;
-}
-
-.opening-invitation__seal::before {
-  inset: 9px;
-}
-
-.opening-invitation__seal::after {
-  inset: -9px;
-}
-
-.opening-invitation__seal > span {
-  position: absolute;
-  top: 19%;
-  color: var(--gold-soft);
-  font-family: var(--serif);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-}
-
-.opening-invitation__seal h1 {
-  display: grid;
-  gap: 0;
-  margin: 18px 0 0;
+  justify-items: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--wine);
   font-family: var(--script);
-  font-size: clamp(3.15rem, 12vw, 4.55rem);
+  font-size: clamp(3.65rem, 13.8vw, 4.6rem);
   font-weight: 400;
-  line-height: 0.65;
+  line-height: 0.9;
 }
 
-.opening-invitation__seal h1 b {
+.opening-invitation__names h1 b {
   font-weight: 400;
 }
 
-.opening-invitation__seal h1 i {
-  color: var(--gold);
-  font-size: 0.56em;
+.opening-invitation__names h1 i {
+  color: #757575;
+  font-size: 0.52em;
   font-weight: 400;
-  line-height: 0.75;
+  line-height: 0.85;
 }
 
 .opening-invitation__date {
-  color: #887b73;
+  margin-top: 30px;
+  color: #626262;
   font-family: var(--serif);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+.opening-invitation__heart {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 18px;
+  fill: currentColor;
+  color: var(--wine);
 }
 
 .opening-invitation__guest {
   display: grid;
-  width: min(360px, 86%);
-  gap: 1px;
+  width: min(350px, 100%);
+  gap: 6px;
   margin-top: 24px;
-  padding: 11px 10px 10px;
-  border-block: 1px solid rgba(168, 132, 84, 0.3);
+  padding: 15px 8px 16px;
+  border-block: 1px solid #d0cece;
 }
 
 .opening-invitation__guest span {
-  color: #9d9189;
+  color: #696969;
   font-family: var(--serif);
-  font-size: 0.61rem;
+  font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.22em;
+  line-height: 1.5;
   text-transform: uppercase;
 }
 
@@ -227,19 +194,19 @@ address {
   overflow-wrap: anywhere;
   color: var(--wine);
   font-family: "Charm", var(--serif);
-  font-size: clamp(1.55rem, 6.5vw, 2.2rem);
+  font-size: clamp(1.7rem, 7.2vw, 2.25rem);
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 1.35;
 }
 
 .opening-invitation__copy {
-  width: min(390px, 90%);
-  margin: 13px auto 0;
-  color: #756861;
+  width: min(330px, 100%);
+  margin: 18px auto 0;
+  color: #696969;
   font-family: var(--serif);
-  font-size: clamp(0.95rem, 3.5vw, 1.08rem);
+  font-size: 1rem;
   font-style: italic;
-  line-height: 1.45;
+  line-height: 1.6;
 }
 
 .opening-invitation__scroll {
@@ -247,7 +214,8 @@ address {
   align-items: center;
   gap: 7px;
   margin-top: auto;
-  color: #9d9189;
+  padding-top: 34px;
+  color: #696969;
   font-family: var(--serif);
   font-size: 0.64rem;
   letter-spacing: 0.12em;
@@ -256,8 +224,12 @@ address {
 }
 
 .opening-invitation__scroll span {
-  color: var(--gold);
+  color: var(--wine);
   font-size: 0.92rem;
+}
+
+.opening-invitation__scroll:focus-visible {
+  outline-color: var(--wine);
 }
 
 .template-hero {
@@ -523,7 +495,7 @@ address {
 .announcement__names i {
   display: block;
   margin: 3px 0 2px;
-  color: var(--gold);
+  color: var(--ink);
   font-size: clamp(1.65rem, 6vw, 2.15rem);
   font-weight: 400;
   line-height: 0.9;
@@ -976,33 +948,27 @@ address {
 
 .calendar__days .is-selected {
   position: relative;
-  border-radius: 50%;
-  background: #f4b4aa;
-  color: var(--wine);
+  isolation: isolate;
+  color: #fff;
   font-weight: 600;
-}
-
-.calendar__days .is-selected::before,
-.calendar__days .is-selected::after {
-  content: "";
-  position: absolute;
-  top: -7px;
-  width: 9px;
-  height: 13px;
-  border-radius: 9px 9px 0 0;
-  background: var(--red);
+  text-shadow: 0 1px 1px #8a1724, 0 0 2px #8a1724;
 }
 
 .calendar__days .is-selected::before {
-  left: calc(50% - 8px);
-  transform: rotate(-45deg);
-  transform-origin: 0 100%;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: -1;
+  width: 145%;
+  height: 145%;
+  background: url("assets/calendar-heart.svg") center / contain no-repeat;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .calendar__days .is-selected::after {
-  left: calc(50% - 1px);
-  transform: rotate(45deg);
-  transform-origin: 100% 100%;
+  content: none;
 }
 
 .calendar-section__footer {

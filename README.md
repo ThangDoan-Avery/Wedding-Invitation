@@ -47,7 +47,7 @@ Website không dùng framework, package manager hoặc bước build. Netlify ph
 
 Trang `/` mở trực tiếp thiệp đơn và không còn card chọn phiên bản. Hai đường dẫn thiệp cũ dành riêng cho phía Thắng và Trang được redirect vĩnh viễn về `/`. Thiệp mới hiển thị cả hai địa điểm. Form RSVP chung chỉ hỏi tên, khả năng tham dự và số lượng người, không hỏi phía mời.
 
-Layout hiện đi theo nhịp thiệp dọc 500px: thiệp hoa cá nhân hóa mở đầu, hero ảnh toàn trang, thông tin gia đình, báo hỷ, hai card tiệc cưới, hành trình xe cưới và timeline ngày cưới (09:00 Đón khách, 10:00 Khai tiệc, 11:00 Lễ thành hôn), lịch Save our date, ảnh Invitation với countdown, hai ảnh Love/You, ảnh dọc kèm RSVP, quà cưới, album carousel, lời chúc và ảnh cảm ơn. Nút Bật/Tắt nhạc nằm ở góc dưới bên phải.
+Layout hiện đi theo nhịp thiệp dọc 500px: thiệp cá nhân hóa tối giản nền trắng xám, viền đỏ rượu mảnh mở đầu, hero ảnh toàn trang, thông tin gia đình, báo hỷ, hai card tiệc cưới, hành trình xe cưới và timeline ngày cưới (09:00 Đón khách, 10:00 Khai tiệc, 11:00 Lễ thành hôn), lịch Save our date, ảnh Invitation với countdown, hai ảnh Love/You, ảnh dọc kèm RSVP, quà cưới, album carousel, lời chúc và ảnh cảm ơn. Trang đầu không dùng hoa lá, vòng tròn, màu vàng hay ảnh đôi; tên hai bạn và tên khách màu đỏ rượu, dấu & và phần chữ phụ màu xám. Nút Bật/Tắt nhạc nằm ở góc dưới bên phải.
 
 Countdown có bốn ô ngày/giờ/phút/giây, cập nhật mỗi giây tới `2026-11-15T09:00:00+07:00`. Khi đến ngày cưới, bộ đếm dừng ở 0. Ảnh đang dùng tài nguyên có sẵn; thay từng đường dẫn ảnh trong HTML và `ALBUM_PHOTOS` khi có album mới.
 

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="96" viewBox="0 0 110 96">
+  <defs>
+    <path id="heart" d="M55 84C46 77 16 62 12 43C8 24 26 15 40 23C47 27 51 32 55 37C60 23 72 14 85 18C103 24 101 42 91 56C80 70 64 79 55 84Z"/>
+    <filter id="ink" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" seed="12" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  1.7 1.7 1.7 0 -1.7" result="speckles"/>
+      <feComposite in="SourceGraphic" in2="speckles" operator="in"/>
+    </filter>
+    <clipPath id="heart-clip"><use href="#heart"/></clipPath>
+  </defs>
+  <g transform="rotate(-12 55 51)">
+    <use href="#heart" fill="#ed8383" opacity=".45"/>
+    <use href="#heart" fill="#d93440" filter="url(#ink)"/>
+    <g clip-path="url(#heart-clip)" fill="none" stroke="#fff" stroke-linecap="round">
+      <path d="m8 36 85-12M10 42l93-13M10 50l89-12M16 58l79-11M22 65l68-10M33 73l48-7" opacity=".28" stroke-width="1" stroke-dasharray=".7 2.1 4.5 1.4"/>
+      <path d="m21 28 24-4m23-1 14-2M12 46l22-3m53-6 12-2M27 70l21-3m17 8 15-2" opacity=".42" stroke-width="1.3" stroke-dasharray="1 1.4"/>
+    </g>
+    <g fill="#df4951" opacity=".65">
+      <circle cx="11" cy="34" r="1.2"/><circle cx="8" cy="40" r=".7"/>
+      <circle cx="15" cy="54" r=".9"/><circle cx="22" cy="63" r=".7"/>
+      <circle cx="91" cy="21" r=".8"/><circle cx="100" cy="34" r="1"/>
+      <circle cx="89" cy="61" r=".8"/><circle cx="65" cy="81" r=".7"/>
+    </g>
+  </g>
+  <path d="M33 16c-2-2-5-4-5-6 0-3 4-4 5-1 2-3 6-2 6 1 0 2-4 5-6 6Z" fill="#d93440" transform="rotate(-16 33 12)"/>
+  <path d="M44 12c-1-1-3-3-3-4 0-2 2-3 3-1 1-2 4-1 4 1 0 1-3 3-4 4Z" fill="#e87678"/>
+</svg>
