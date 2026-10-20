@@ -23,6 +23,10 @@ html {
   scroll-behavior: smooth;
 }
 
+html.is-auto-scrolling {
+  scroll-behavior: auto !important;
+}
+
 body {
   min-width: 320px;
   margin: 0;

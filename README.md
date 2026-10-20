@@ -35,6 +35,8 @@ https://tntweddinginvitation.netlify.app/?guest=B%E1%BA%A1n+Th%E1%BA%AFng+A3
 deploy/
   index.html
   app.js
+  cover.js
+  auto-scroll.js
   hearts.js
   styles.css
   assets/
@@ -45,11 +47,13 @@ supabase-wishes.sql
 
 Website không dùng framework, package manager hoặc bước build. Netlify phục vụ trực tiếp thư mục `deploy`.
 
-Trang `/` mở thiệp đơn và không còn card chọn phiên bản. Bìa đỏ hai cánh với dấu Song Hỷ xuất hiện trước thiệp: chạm/nhấp bất kỳ vị trí nào để mở ngay, hoặc tự bắt đầu mở sau 1 giây. Hai cánh trượt sang hai bên trong khoảng 1,1 giây; khi xong, lớp bìa được ẩn và trả lại thao tác cuộn, bàn phím và nút nhạc. Hai đường dẫn thiệp cũ dành riêng cho phía Thắng và Trang được redirect vĩnh viễn về `/`. Thiệp mới hiển thị cả hai địa điểm. Form RSVP chung chỉ hỏi tên, khả năng tham dự và số lượng người, không hỏi phía mời.
+Trang `/` mở thiệp đơn và không còn card chọn phiên bản. Bìa đỏ hai cánh với dấu Song Hỷ xuất hiện trước thiệp: chạm/nhấp bất kỳ vị trí nào để mở ngay, hoặc tự bắt đầu mở sau 5 giây. Hai cánh trượt sang hai bên trong khoảng 1,1 giây; khi xong, lớp bìa được ẩn và trả lại thao tác cuộn, bàn phím và nút nhạc. Hai đường dẫn thiệp cũ dành riêng cho phía Thắng và Trang được redirect vĩnh viễn về `/`. Thiệp mới hiển thị cả hai địa điểm. Form RSVP chung chỉ hỏi tên, khả năng tham dự và số lượng người, không hỏi phía mời.
 
-Hiệu ứng bìa nằm trong `deploy/cover.js`, được tải độc lập trước thư viện ngoài để không phải chờ chúng. Bìa chỉ bật khi JavaScript của nó khởi tạo thành công; nếu tắt JavaScript hoặc file hiệu ứng không tải được, khách vẫn xem được thiệp. Enter/Space trên nút mở và Escape đều mở bìa. Chế độ giảm chuyển động bỏ qua phần trượt nhưng vẫn giữ mốc tự mở 1 giây. Quay lại bằng bộ nhớ trang của trình duyệt không phát lại bìa; tải mới trang sẽ hiển thị bìa lại. Nội dung thiệp nền trắng xám, tên khách theo URL, nhạc MP3 và tim rơi được giữ nguyên.
+Hiệu ứng bìa nằm trong `deploy/cover.js`, được tải độc lập trước thư viện ngoài để không phải chờ chúng. Bìa chỉ bật khi JavaScript của nó khởi tạo thành công; nếu tắt JavaScript hoặc file hiệu ứng không tải được, khách vẫn xem được thiệp. Enter/Space trên nút mở và Escape đều mở bìa. Chế độ giảm chuyển động bỏ qua phần trượt nhưng vẫn giữ mốc tự mở 5 giây. Quay lại bằng bộ nhớ trang của trình duyệt không phát lại bìa; tải mới trang sẽ hiển thị bìa lại. Nội dung thiệp nền trắng xám, tên khách theo URL, nhạc MP3 và tim rơi được giữ nguyên.
 
-Layout hiện đi theo nhịp thiệp dọc 500px: thiệp cá nhân hóa tối giản nền trắng xám, viền đỏ rượu mảnh mở đầu, hero ảnh toàn trang, thông tin gia đình, báo hỷ, hai card tiệc cưới, hành trình xe cưới và timeline ngày cưới (09:00 Đón khách, 10:00 Khai tiệc, 12:00 Lễ thành hôn), lịch Save our date, ảnh Invitation với countdown, hai ảnh Love/You, ảnh dọc kèm RSVP, quà cưới, album carousel, lời chúc và ảnh cảm ơn. Trang đầu không dùng hoa lá, vòng tròn, màu vàng hay ảnh đôi; tên hai bạn và tên khách màu đỏ rượu, dấu & và phần chữ phụ màu xám. Nút Bật/Tắt nhạc nằm ở góc dưới bên phải.
+Sau khi bìa mở hoàn toàn và trang sẵn sàng, thiệp đợi thêm 1,2 giây rồi tự cuộn chậm khoảng 20 px/giây. Không có nút bật/tắt tự cuộn. Chạm/nhấp vào thiệp, cuộn chuột, thao tác bàn phím hoặc nhập biểu mẫu sẽ dừng tự cuộn; thao tác mở bìa không tính là yêu cầu dừng. Sau khi dừng, thiệp không tự cuộn lại trong lần xem đó. Chuyển tab, mở popup, quay lại trang bằng lịch sử hoặc đến cuối thiệp cũng dừng cuộn; không nhảy về đầu. Thiết bị bật giảm chuyển động sẽ không tự cuộn. Mã xử lý nằm trong `deploy/auto-scroll.js`, không thay đổi thao tác cuộn thủ công hay chặn sự kiện của nút nhạc.
+
+Layout hiện đi theo nhịp thiệp dọc 500px: thiệp cá nhân hóa tối giản nền trắng xám, viền đỏ rượu mảnh mở đầu, hero ảnh toàn trang, thông tin gia đình, báo hỷ, hai card tiệc cưới, hành trình xe cưới và timeline ngày cưới (09:30 Khai tiệc, 11:30 Đón dâu, 12:00 Lễ thành hôn), lịch Save our date, ảnh Invitation với countdown, hai ảnh Love/You, ảnh dọc kèm RSVP, quà cưới, album carousel, lời chúc và ảnh cảm ơn. Trang đầu không dùng hoa lá, vòng tròn, màu vàng hay ảnh đôi; tên hai bạn và tên khách màu đỏ rượu, dấu & và phần chữ phụ màu xám. Nút Bật/Tắt nhạc nằm ở góc dưới bên phải.
 
 Countdown có bốn ô ngày/giờ/phút/giây, cập nhật mỗi giây tới `2026-11-15T09:00:00+07:00`. Khi đến ngày cưới, bộ đếm dừng ở 0. Ảnh đang dùng tài nguyên có sẵn; thay từng đường dẫn ảnh trong HTML và `ALBUM_PHOTOS` khi có album mới.
 
@@ -163,6 +167,7 @@ Kiểm tra tối thiểu:
 - Countdown hiển thị bốn ô và đếm đúng tới 09:00 ngày 15/11/2026 (UTC+7).
 - `#weddingAudio` dùng đúng `/assets/Anh-nang-cua-anh.mp3`, `preload="metadata"` và `loop`; không tạo iframe hoặc gọi YouTube API. Trang thử phát ngay, sau đó dùng tương tác tin cậy đầu tiên làm fallback nếu autoplay bị chặn. Thông báo blocked/error hiển thị rõ; nút nhạc pause/resume giữ nguyên `currentTime`, còn thao tác tắt thủ công ngăn các lần tự bật lại sau đó.
 - Trái tim tự rơi, không cản nút/form; nút hình tim tắt/bật hiệu ứng. Đổi tab tạm dừng và chế độ giảm chuyển động ẩn hiệu ứng hoàn toàn.
+- Tự cuộn chỉ bắt đầu sau khi bìa mở hết, tốc độ khoảng 20 px/giây và không có nút điều khiển riêng. Chạm, cuộn chuột, bàn phím hoặc tương tác biểu mẫu dừng ngay; sau đó không tự chạy lại. Popup, tab ẩn, cuối trang và chế độ giảm chuyển động cũng dừng hoặc ngăn tự cuộn.
 - Hai link bản đồ và hai link thêm lịch mở đúng địa điểm.
 - RSVP (gồm số lượng người) và lời chúc gửi thành công lên Supabase sau khi cập nhật schema.
 - QR ngân hàng quét đúng tên và số tài khoản.

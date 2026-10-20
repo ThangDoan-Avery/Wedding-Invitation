@@ -139,7 +139,9 @@ function createHarness({
       return this.selectors.get(selector) || null;
     },
     querySelectorAll(selector) {
-      return selector === ".invitation, #musicControls, #heartsToggle" ? this.backgroundNodes : [];
+      return selector === ".invitation, #musicControls, #heartsToggle"
+        ? this.backgroundNodes
+        : [];
     },
     selectors: new Map(),
   };
@@ -200,7 +202,7 @@ function createHarness({
   };
 }
 
-test("activates progressively and begins automatic opening at exactly one second", () => {
+test("activates progressively and begins automatic opening at exactly five seconds", () => {
   const harness = createHarness();
 
   assert.equal(harness.cover.hidden, false);
@@ -212,7 +214,9 @@ test("activates progressively and begins automatic opening at exactly one second
   assert.equal(harness.document.activeElement, harness.openButton);
   assert.equal(harness.openButton.focusOptions?.preventScroll, true);
 
-  harness.clock.tick(999);
+  harness.clock.tick(1000);
+  assert.equal(harness.cover.dataset.state, "closed");
+  harness.clock.tick(3999);
   assert.equal(harness.cover.dataset.state, "closed");
   harness.clock.tick(1);
   assert.equal(harness.cover.dataset.state, "opening");
@@ -230,14 +234,32 @@ test("an early pointer opens once, cancels auto-open, and uses the 1200ms fallba
 
   assert.equal(harness.cover.dataset.state, "opening");
   assert.equal(harness.clock.tasks.size, 1);
-  harness.clock.tick(600);
-  assert.equal(harness.cover.dataset.state, "opening", "the canceled one-second timer must not reopen");
   harness.clock.tick(599);
+  assert.equal(harness.cover.hidden, false);
+  harness.clock.tick(600);
   assert.equal(harness.cover.hidden, false);
   harness.clock.tick(1);
   assert.equal(harness.cover.dataset.state, "opened");
   assert.equal(harness.cover.hidden, true);
   assert.equal(harness.clock.tasks.size, 0);
+});
+
+test("a tap just before five seconds opens immediately and cancels auto-open", () => {
+  const harness = createHarness();
+  harness.clock.tick(4999);
+  assert.equal(harness.cover.dataset.state, "closed");
+
+  harness.openButton.dispatch("pointerup", { isTrusted: true });
+  assert.equal(harness.cover.dataset.state, "opening");
+  assert.equal(harness.clock.tasks.size, 1);
+
+  harness.clock.tick(1);
+  assert.equal(harness.cover.dataset.state, "opening", "the canceled five-second timer must not run");
+  harness.clock.tick(1198);
+  assert.equal(harness.cover.hidden, false);
+  harness.clock.tick(1);
+  assert.equal(harness.cover.dataset.state, "opened");
+  assert.equal(harness.cover.hidden, true);
 });
 
 test("click, Escape, Enter, and Space each open the cover", () => {
@@ -281,14 +303,16 @@ test("only transform completion from both panels finishes the cover", () => {
   assert.equal(harness.window.listenerCount("pagehide"), 0);
 });
 
-test("reduced motion skips panel animation and restores prior states immediately", () => {
+test("reduced motion waits five seconds, then opens without panel animation", () => {
   const harness = createHarness({
     invitationInitiallyInert: true,
     reducedMotion: true,
     rootInitiallyLocked: true,
   });
 
-  harness.openButton.dispatch("keydown", { isTrusted: true, key: " " });
+  harness.clock.tick(4999);
+  assert.equal(harness.cover.dataset.state, "closed");
+  harness.clock.tick(1);
   assert.equal(harness.cover.dataset.state, "opened");
   assert.equal(harness.cover.hidden, true);
   assert.equal(harness.cover.classList.contains("is-opening"), false);

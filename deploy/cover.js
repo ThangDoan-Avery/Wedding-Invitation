@@ -127,7 +127,7 @@ function initializeInvitationCover() {
     // The timer and pointer interaction remain available when focus is unsupported.
   }
 
-  autoOpenTimer = window.setTimeout(beginOpening, 1000);
+  autoOpenTimer = window.setTimeout(beginOpening, 5000);
 }
 
 initializeInvitationCover();
