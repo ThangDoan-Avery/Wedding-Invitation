@@ -35,17 +35,20 @@ https://tntweddinginvitation.netlify.app/?guest=B%E1%BA%A1n+Th%E1%BA%AFng+A3
 deploy/
   index.html
   app.js
+  album-data.js
   cover.js
   auto-scroll.js
   hearts.js
   styles.css
   assets/
     Anh-nang-cua-anh.mp3
+scripts/
+  generate-album.cjs
 netlify.toml
 supabase-wishes.sql
 ```
 
-Website không dùng framework, package manager hoặc bước build. Netlify phục vụ trực tiếp thư mục `deploy`.
+Website không dùng framework hoặc package manager. Trước khi phục vụ thư mục tĩnh `deploy`, Netlify chạy một script Node.js không cần thư viện ngoài để cập nhật danh sách ảnh album.
 
 Trang `/` mở thiệp đơn và không còn card chọn phiên bản. Bìa đỏ hai cánh với dấu Song Hỷ xuất hiện trước thiệp: chạm/nhấp bất kỳ vị trí nào để mở ngay, hoặc tự bắt đầu mở sau 5 giây. Hai cánh trượt sang hai bên trong khoảng 1,1 giây; khi xong, lớp bìa được ẩn và trả lại thao tác cuộn, bàn phím và nút nhạc. Hai đường dẫn thiệp cũ dành riêng cho phía Thắng và Trang được redirect vĩnh viễn về `/`. Thiệp mới hiển thị cả hai địa điểm. Form RSVP chung chỉ hỏi tên, khả năng tham dự và số lượng người, không hỏi phía mời.
 
@@ -55,7 +58,11 @@ Sau khi bìa mở hoàn toàn và trang sẵn sàng, thiệp đợi thêm 1,2 gi
 
 Layout hiện đi theo nhịp thiệp dọc 500px: thiệp cá nhân hóa tối giản nền trắng xám, viền đỏ rượu mảnh mở đầu, hero ảnh toàn trang, thông tin gia đình, báo hỷ, hai card tiệc cưới, hành trình xe cưới và timeline ngày cưới (09:30 Khai tiệc, 11:30 Đón dâu, 12:00 Lễ thành hôn), lịch Save our date, ảnh Invitation với countdown, hai ảnh Love/You, ảnh dọc kèm RSVP, quà cưới, album carousel, lời chúc và ảnh cảm ơn. Trang đầu không dùng hoa lá, vòng tròn, màu vàng hay ảnh đôi; tên hai bạn và tên khách màu đỏ rượu, dấu & và phần chữ phụ màu xám. Nút Bật/Tắt nhạc nằm ở góc dưới bên phải.
 
-Countdown có bốn ô ngày/giờ/phút/giây, cập nhật mỗi giây tới `2026-11-15T09:00:00+07:00`. Khi đến ngày cưới, bộ đếm dừng ở 0. Ảnh đang dùng tài nguyên có sẵn; thay từng đường dẫn ảnh trong HTML và `ALBUM_PHOTOS` khi có album mới.
+Countdown có bốn ô ngày/giờ/phút/giây, cập nhật mỗi giây tới `2026-11-15T09:00:00+07:00`. Khi đến ngày cưới, bộ đếm dừng ở 0. Các ảnh riêng trên thiệp vẫn được cấu hình trong HTML; ảnh trong Album of Love được lấy tự động theo quy tắc tên file bên dưới.
+
+Album of Love lấy mọi file ảnh nằm trực tiếp trong `deploy/assets/` có tên bắt đầu bằng `list`, không phân biệt chữ hoa/thường. Các định dạng hỗ trợ: JPG, JPEG, PNG, WebP, AVIF, GIF, SVG và BMP. Danh sách được xếp tự nhiên theo tên, ví dụ `list1.jpg`, `list2.jpeg`, `list10.jpg`; các ảnh `anh...`, QR và ảnh nền không vào album. Ảnh chính hiển thị đầy đủ trong khung dọc, hàng thumbnail vuốt ngang, hỗ trợ nút trước/sau, phím mũi tên và bấm ảnh để mở lớn.
+
+Script `scripts/generate-album.cjs` tạo `deploy/album-data.js`; không sửa tay file dữ liệu này. Mỗi lần Netlify triển khai từ repository, script tự quét lại các ảnh `list...` được thêm hoặc xóa. Khi xem local hoặc tải thư mục `deploy` lên thủ công, chạy `node scripts/generate-album.cjs` sau khi thay ảnh, rồi tải lại trang. Script chỉ tạo danh sách, không thay đổi ảnh gốc. Nếu chưa có ảnh phù hợp, album hiển thị trạng thái đang cập nhật.
 
 Nhấn vào hộp quà để mở popup “Hộp Quà Yêu Thương”: hai cột chú rể/cô dâu, QR đen trắng, tên chủ tài khoản, ngân hàng, số tài khoản và nút sao chép. Có thể đóng bằng nút Đóng, Escape hoặc chạm nền ngoài. Khi không sao chép tự động được, popup chọn số tài khoản để khách sao chép thủ công.
 
@@ -74,6 +81,7 @@ Khi kiểm tra nhạc local, dùng `http://localhost:8000/` như hướng dẫn 
 ## Chạy local
 
 ```powershell
+node scripts/generate-album.cjs
 python -m http.server 8000 --directory deploy
 ```
 
@@ -143,6 +151,7 @@ Netlify được cấu hình trong [netlify.toml](netlify.toml):
 
 ```toml
 [build]
+  command = "node scripts/generate-album.cjs"
   publish = "deploy"
 ```
 
@@ -153,6 +162,7 @@ Repository hiện dùng nhánh `main`. Sau khi thay đổi đã được kiểm 
 ## Kiểm tra nhanh
 
 ```powershell
+node scripts/generate-album.cjs
 node --check deploy/app.js
 node --test tests/*.test.cjs
 python -m http.server 8000 --directory deploy
@@ -169,6 +179,7 @@ Kiểm tra tối thiểu:
 - Trái tim tự rơi, không cản nút/form; nút hình tim tắt/bật hiệu ứng. Đổi tab tạm dừng và chế độ giảm chuyển động ẩn hiệu ứng hoàn toàn.
 - Tự cuộn chỉ bắt đầu sau khi bìa mở hết, tốc độ khoảng 20 px/giây và không có nút điều khiển riêng. Chạm, cuộn chuột, bàn phím hoặc tương tác biểu mẫu dừng ngay; sau đó không tự chạy lại. Popup, tab ẩn, cuối trang và chế độ giảm chuyển động cũng dừng hoặc ngăn tự cuộn.
 - Hai link bản đồ và hai link thêm lịch mở đúng địa điểm.
+- Album nhận đủ ảnh `list...`, đúng thứ tự số, không chứa ảnh khác; thumbnail/counter tự cập nhật theo số ảnh. Trước/sau, phím mũi tên và mở ảnh lớn phải trỏ đúng file; hàng thumbnail không làm tràn ngang trang.
 - RSVP (gồm số lượng người) và lời chúc gửi thành công lên Supabase sau khi cập nhật schema.
 - QR ngân hàng quét đúng tên và số tài khoản.
 - Popup quà cưới mở/đóng đúng, sao chép đúng số tài khoản của từng bên và trả focus về nút mở khi đóng.

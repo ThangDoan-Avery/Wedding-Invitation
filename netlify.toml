@@ -1,4 +1,5 @@
 [build]
+  command = "node scripts/generate-album.cjs"
   publish = "deploy"
 
 [[redirects]]

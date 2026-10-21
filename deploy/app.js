@@ -25,28 +25,25 @@ const WEDDING = {
   },
 };
 
-const ALBUM_PHOTOS = [
-  {
-    src: "/assets/couple-photo.png",
-    alt: "Hữu Thắng và Thu Trang giữa khu vườn hoa",
-    position: "50% 18%",
-  },
-  {
-    src: "/assets/couple-photo.png",
-    alt: "Khoảnh khắc dịu dàng của cô dâu chú rể",
-    position: "50% 38%",
-  },
-  {
-    src: "/assets/couple-photo.png",
-    alt: "Bó hoa và váy cưới của Thu Trang",
-    position: "40% 64%",
-  },
-  {
-    src: "/assets/couple-photo.png",
-    alt: "Hữu Thắng và Thu Trang trong ngày cưới",
-    position: "68% 82%",
-  },
-];
+const ALBUM_PHOTOS = Array.isArray(globalThis.INVITATION_ALBUM_PHOTOS)
+  ? globalThis.INVITATION_ALBUM_PHOTOS
+    .filter((photo) => (
+      photo
+      && typeof photo === "object"
+      && !Array.isArray(photo)
+      && typeof photo.src === "string"
+      && photo.src.trim()
+    ))
+    .map((photo, index) => ({
+      src: photo.src.trim(),
+      alt: typeof photo.alt === "string" && photo.alt.trim()
+        ? photo.alt.trim()
+        : `Ảnh cưới Hữu Thắng và Thu Trang ${index + 1}`,
+      position: typeof photo.position === "string" && photo.position.trim()
+        ? photo.position.trim()
+        : "50% 50%",
+    }))
+  : [];
 
 const DEFAULT_GUEST = "Quý khách";
 const SUPABASE_URL = "https://fqafkaihbwgjqcabvisg.supabase.co";
@@ -516,12 +513,53 @@ function setupRsvp() {
 
 function setupAlbum() {
   const album = select("[data-album]");
+  const viewer = select("#albumViewer");
+  const emptyState = select("#albumEmpty");
   const mainImage = select("#albumImage");
   const previousButton = select("#albumPrev");
   const nextButton = select("#albumNext");
   const counter = select("#albumCounter");
-  const thumbs = selectAll("[data-album-index]");
-  if (!album || !mainImage || !previousButton || !nextButton || !counter || !thumbs.length) return;
+  const thumbContainer = select("#albumThumbs");
+  if (
+    !album
+    || !viewer
+    || !emptyState
+    || !mainImage
+    || !previousButton
+    || !nextButton
+    || !counter
+    || !thumbContainer
+  ) return;
+
+  thumbContainer.replaceChildren();
+  previousButton.disabled = ALBUM_PHOTOS.length <= 1;
+  nextButton.disabled = ALBUM_PHOTOS.length <= 1;
+
+  if (!ALBUM_PHOTOS.length) {
+    viewer.hidden = true;
+    emptyState.hidden = false;
+    counter.textContent = "";
+    return;
+  }
+
+  viewer.hidden = false;
+  emptyState.hidden = true;
+
+  const thumbs = ALBUM_PHOTOS.map((photo, index) => {
+    const button = document.createElement("button");
+    const image = document.createElement("img");
+    button.type = "button";
+    button.dataset.albumIndex = String(index);
+    button.setAttribute("aria-label", `Xem ảnh ${index + 1}`);
+    image.src = photo.src;
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.style.objectPosition = photo.position;
+    button.append(image);
+    thumbContainer.append(button);
+    return button;
+  });
 
   let activeIndex = 0;
 
@@ -535,33 +573,51 @@ function setupAlbum() {
     thumbs.forEach((button, index) => {
       const isActive = index === activeIndex;
       button.setAttribute("aria-current", isActive ? "true" : "false");
-      const thumbImage = select("img", button);
-      if (thumbImage && ALBUM_PHOTOS[index]) {
-        thumbImage.src = ALBUM_PHOTOS[index].src;
-        thumbImage.style.objectPosition = ALBUM_PHOTOS[index].position;
-      }
     });
   };
 
-  const show = (index) => {
-    activeIndex = (index + ALBUM_PHOTOS.length) % ALBUM_PHOTOS.length;
-    render();
+  const scrollActiveThumbIntoView = () => {
+    const activeThumb = thumbs[activeIndex];
+    if (!activeThumb || typeof thumbContainer.scrollTo !== "function") return;
+    const containerRect = thumbContainer.getBoundingClientRect();
+    const thumbRect = activeThumb.getBoundingClientRect();
+    const left = Math.max(
+      0,
+      Number(thumbContainer.scrollLeft || 0)
+        + Number(thumbRect.left || 0)
+        - Number(containerRect.left || 0)
+        - (Number(containerRect.width || 0) - Number(thumbRect.width || 0)) / 2,
+    );
+    thumbContainer.scrollTo({ left, behavior: "auto" });
   };
 
-  previousButton.addEventListener("click", () => show(activeIndex - 1));
-  nextButton.addEventListener("click", () => show(activeIndex + 1));
+  const show = (index, { scrollThumb = false } = {}) => {
+    const requestedIndex = Number(index);
+    if (!Number.isInteger(requestedIndex)) return;
+    activeIndex = (
+      (Math.trunc(requestedIndex) % ALBUM_PHOTOS.length) + ALBUM_PHOTOS.length
+    ) % ALBUM_PHOTOS.length;
+    render();
+    if (scrollThumb) scrollActiveThumbIntoView();
+  };
+
+  previousButton.addEventListener("click", () => show(activeIndex - 1, { scrollThumb: true }));
+  nextButton.addEventListener("click", () => show(activeIndex + 1, { scrollThumb: true }));
   thumbs.forEach((button) => {
-    button.addEventListener("click", () => show(Number(button.dataset.albumIndex || 0)));
+    button.addEventListener("click", () => {
+      show(Number(button.dataset.albumIndex || 0), { scrollThumb: true });
+    });
   });
 
   album.addEventListener("keydown", (event) => {
+    if (ALBUM_PHOTOS.length <= 1) return;
     if (event.key === "ArrowLeft") {
       event.preventDefault();
-      show(activeIndex - 1);
+      show(activeIndex - 1, { scrollThumb: true });
     }
     if (event.key === "ArrowRight") {
       event.preventDefault();
-      show(activeIndex + 1);
+      show(activeIndex + 1, { scrollThumb: true });
     }
   });
 

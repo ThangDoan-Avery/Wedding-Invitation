@@ -390,6 +390,7 @@ address {
 }
 
 .template-hero {
+  --hero-text: #fffaf5;
   position: relative;
   aspect-ratio: 500 / 767;
   overflow: hidden;
@@ -408,9 +409,14 @@ address {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(25, 18, 14, 0.08), transparent 30%),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.52), transparent 36%);
+    linear-gradient(180deg, rgba(18, 18, 18, 0.35), rgba(18, 18, 18, 0.1) 22%, transparent 42%),
+    linear-gradient(0deg, rgba(18, 18, 18, 0.84), rgba(18, 18, 18, 0.64) 20%, transparent 44%);
   pointer-events: none;
+}
+
+.template-hero__names,
+.template-hero__schedule {
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 0.8);
 }
 
 .template-hero__names {
@@ -424,7 +430,7 @@ address {
 
 .template-hero__names > p {
   margin: 0 3px 5px 0;
-  color: rgba(97, 16, 16, 0.8);
+  color: var(--hero-text);
   font-family: var(--serif);
   font-size: clamp(0.56rem, 1.9vw, 0.72rem);
   font-weight: 600;
@@ -435,7 +441,7 @@ address {
 .template-hero__names h2 {
   display: grid;
   margin: 0;
-  color: #463831;
+  color: var(--hero-text);
   font-family: var(--script);
   font-size: clamp(2.35rem, 9vw, 3.45rem);
   font-weight: 400;
@@ -444,7 +450,7 @@ address {
 
 .template-hero__names h2 i {
   margin-right: 18%;
-  color: var(--wine);
+  color: var(--hero-text);
   font-size: 0.62em;
   font-weight: 400;
   line-height: 0.75;
@@ -458,7 +464,7 @@ address {
   display: grid;
   width: 47%;
   gap: 4px;
-  color: var(--wine);
+  color: var(--hero-text);
   text-align: center;
 }
 
@@ -468,7 +474,7 @@ address {
   width: 72%;
   height: 1px;
   margin: 5px auto;
-  background: rgba(97, 16, 16, 0.34);
+  background: rgba(255, 250, 245, 0.75);
 }
 
 .template-hero__schedule p,
@@ -1982,13 +1988,13 @@ textarea:focus {
 
 .album-viewer__main {
   width: 100%;
-  aspect-ratio: 477 / 350;
+  aspect-ratio: 2 / 3;
   display: block;
   padding: 0;
   overflow: hidden;
   border: 0;
   border-radius: 12px;
-  background: #cdb9a7;
+  background: #f5f5f5;
   cursor: zoom-in;
 }
 
@@ -1996,7 +2002,7 @@ textarea:focus {
   width: 100%;
   height: 100%;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   object-position: 50% 50%;
   transition:
     opacity 180ms ease,
@@ -2040,6 +2046,11 @@ textarea:focus {
   justify-content: flex-start;
   gap: 10px;
   margin-top: 18px;
+  padding: 4px 2px 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--wine) #eee;
 }
 
 .album-thumbs button {
@@ -2072,20 +2083,22 @@ textarea:focus {
   object-fit: cover;
 }
 
-.album-thumbs button:nth-child(1) img {
-  object-position: 50% 18%;
+.album-empty {
+  margin: 0;
+  padding: 16px 24px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
 }
 
-.album-thumbs button:nth-child(2) img {
-  object-position: 50% 38%;
+.album-viewer[hidden],
+.album-empty[hidden] {
+  display: none;
 }
 
-.album-thumbs button:nth-child(3) img {
-  object-position: 40% 64%;
-}
-
-.album-thumbs button:nth-child(4) img {
-  object-position: 68% 82%;
+.album-viewer__arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
 }
 
 .closing-photo {
@@ -2357,6 +2370,7 @@ textarea:focus {
 
 .photo-dialog img {
   width: 100%;
+  height: auto;
   max-height: 88vh;
   display: block;
   border-radius: 8px;
