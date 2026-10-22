@@ -390,7 +390,6 @@ address {
 }
 
 .template-hero {
-  --hero-text: #fffaf5;
   position: relative;
   aspect-ratio: 500 / 767;
   overflow: hidden;
@@ -409,14 +408,9 @@ address {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(18, 18, 18, 0.35), rgba(18, 18, 18, 0.1) 22%, transparent 42%),
-    linear-gradient(0deg, rgba(18, 18, 18, 0.84), rgba(18, 18, 18, 0.64) 20%, transparent 44%);
+    linear-gradient(180deg, rgba(25, 18, 14, 0.08), transparent 30%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.52), transparent 36%);
   pointer-events: none;
-}
-
-.template-hero__names,
-.template-hero__schedule {
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 0.8);
 }
 
 .template-hero__names {
@@ -430,7 +424,7 @@ address {
 
 .template-hero__names > p {
   margin: 0 3px 5px 0;
-  color: var(--hero-text);
+  color: rgba(97, 16, 16, 0.8);
   font-family: var(--serif);
   font-size: clamp(0.56rem, 1.9vw, 0.72rem);
   font-weight: 600;
@@ -441,7 +435,7 @@ address {
 .template-hero__names h2 {
   display: grid;
   margin: 0;
-  color: var(--hero-text);
+  color: #463831;
   font-family: var(--script);
   font-size: clamp(2.35rem, 9vw, 3.45rem);
   font-weight: 400;
@@ -450,7 +444,7 @@ address {
 
 .template-hero__names h2 i {
   margin-right: 18%;
-  color: var(--hero-text);
+  color: var(--wine);
   font-size: 0.62em;
   font-weight: 400;
   line-height: 0.75;
@@ -464,7 +458,7 @@ address {
   display: grid;
   width: 47%;
   gap: 4px;
-  color: var(--hero-text);
+  color: var(--wine);
   text-align: center;
 }
 
@@ -474,7 +468,7 @@ address {
   width: 72%;
   height: 1px;
   margin: 5px auto;
-  background: rgba(255, 250, 245, 0.75);
+  background: rgba(97, 16, 16, 0.34);
 }
 
 .template-hero__schedule p,
