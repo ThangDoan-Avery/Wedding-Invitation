@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/generate-album.cjs"
+  command = "node scripts/generate-album.cjs && node scripts/generate-dinner.cjs"
   publish = "deploy"
 
 [[redirects]]
@@ -65,6 +65,42 @@
 [[redirects]]
   from = "/guest=*"
   to = "/index.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dinner."
+  to = "/dinner.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dinner./"
+  to = "/dinner.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dinner.guest"
+  to = "/dinner.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dinner.guest/"
+  to = "/dinner.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dinner"
+  to = "/dinner.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dinner/"
+  to = "/dinner.html"
   status = 200
   force = true
 

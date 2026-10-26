@@ -55,10 +55,5 @@ globalThis.INVITATION_ALBUM_PHOTOS = [
     "src": "/assets/list12.png",
     "alt": "Ảnh cưới Hữu Thắng và Thu Trang 11",
     "position": "50% 50%"
-  },
-  {
-    "src": "/assets/list13.png",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 12",
-    "position": "50% 50%"
   }
 ];

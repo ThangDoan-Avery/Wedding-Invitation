@@ -8,7 +8,7 @@ const timeline = html.match(
   /<article\b[^>]*class="[^"]*\bwedding-timeline\b[^"]*"[^>]*>[\s\S]*?<\/article>/u,
 )?.[0];
 
-test("wedding timeline keeps the date and exactly three ordered events", () => {
+test("wedding timeline keeps the date and exactly four ordered events", () => {
   assert.ok(timeline, "Wedding timeline article is missing");
   assert.match(
     timeline,
@@ -21,7 +21,7 @@ test("wedding timeline keeps the date and exactly three ordered events", () => {
   assert.ok(list, "Wedding timeline event list is missing");
 
   const rows = [...list.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gu)].map((match) => match[1]);
-  assert.equal(rows.length, 3);
+  assert.equal(rows.length, 4);
 
   const actual = rows.map((row) => {
     const time = row.match(/<time\b[^>]*datetime="([^"]+)"[^>]*>\s*([^<]+?)\s*<\/time>/u);
@@ -38,6 +38,11 @@ test("wedding timeline keeps the date and exactly three ordered events", () => {
   });
 
   assert.deepEqual(actual, [
+    {
+      datetime: "2026-11-15T09:00:00+07:00",
+      displayTime: "09:00",
+      label: "Đón khách",
+    },
     {
       datetime: "2026-11-15T09:30:00+07:00",
       displayTime: "09:30",

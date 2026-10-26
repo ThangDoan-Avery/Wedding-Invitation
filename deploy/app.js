@@ -77,6 +77,10 @@ function normalizeText(value, maxLength) {
   return Array.from(normalized).slice(0, maxLength).join("");
 }
 
+function isDinnerPath(pathname) {
+  return /^\/dinner(?:\.|\.guest|\.html)?\/?$/u.test(pathname);
+}
+
 function readGuestParam(search = window.location.search, pathname = window.location.pathname) {
   const fallback = { displayName: DEFAULT_GUEST, supplied: false };
 
@@ -89,8 +93,9 @@ function readGuestParam(search = window.location.search, pathname = window.locat
       encodedGuest = match[1];
     } else {
       // Keep old ?guest= links, including encoded keys, and decode the value strictly once.
-      const entry = search.replace(/^\?/u, "").split("&")
-        .find((part) => new URLSearchParams(part).has("guest"));
+      const entries = search.replace(/^\?/u, "").split("&");
+      const entry = entries.find((part) => new URLSearchParams(part).has("guest"))
+        ?? (isDinnerPath(pathname) ? entries.find((part) => part.startsWith("=")) : undefined);
       if (entry !== undefined) {
         const separator = entry.indexOf("=");
         encodedGuest = separator === -1 ? "" : entry.slice(separator + 1);
@@ -112,6 +117,41 @@ function readGuestParam(search = window.location.search, pathname = window.locat
   } catch {
     return fallback;
   }
+}
+
+function applyInvitationSchedule() {
+  const schedule = document.body?.dataset;
+  if (schedule?.invitationVariant !== "dinner") return false;
+
+  // Static dinner HTML supplies the schedule before any countdown/calendar work.
+  // Keep the normal invitation untouched and reject an incomplete/invalid override.
+  const parseScheduleTime = (value) => {
+    if (typeof value !== "string"
+      || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+07:00$/u.test(value)) return null;
+    const timestamp = Date.parse(value);
+    if (!Number.isFinite(timestamp)) return null;
+    const local = new Date(timestamp + 7 * 60 * 60 * 1000);
+    if (local.toISOString().slice(0, 19) !== value.slice(0, 19)) return null;
+    return { timestamp, local };
+  };
+
+  const start = parseScheduleTime(schedule.weddingStart);
+  const end = parseScheduleTime(schedule.weddingEnd);
+  if (!start || !end || end.timestamp <= start.timestamp) return false;
+
+  const calendarStamp = (timestamp) => new Date(timestamp).toISOString()
+    .replace(/[-:]/gu, "").replace(".000", "");
+  WEDDING.date = {
+    year: start.local.getUTCFullYear(),
+    month: start.local.getUTCMonth() + 1,
+    day: start.local.getUTCDate(),
+  };
+  WEDDING.countdownTargetISO = schedule.weddingStart;
+  Object.values(WEDDING.events).forEach((event) => {
+    event.startUtc = calendarStamp(start.timestamp);
+    event.endUtc = calendarStamp(end.timestamp);
+  });
+  return true;
 }
 
 function applyGuestName(guest) {
@@ -1067,6 +1107,7 @@ function setupRevealAnimations() {
 }
 
 function initializeInvitation() {
+  applyInvitationSchedule();
   const guest = readGuestParam();
   applyGuestName(guest);
   fillCalendar();

@@ -29,11 +29,32 @@ https://tntweddinginvitation.netlify.app/?guest=B%E1%BA%A1n+Th%E1%BA%AFng+A3
 - Tên khách được đưa vào giao diện bằng `textContent`, không được thực thi như HTML.
 - Tên nằm trong URL có thể xuất hiện trong lịch sử trình duyệt; không dùng tham số này cho thông tin riêng tư.
 
+### Thiệp mời tiệc tối
+
+Biến thể tiệc tối không có tên khách dùng đường dẫn:
+
+```text
+https://tntweddinginvitation.netlify.app/dinner.
+```
+
+Thiệp tiệc tối cá nhân hóa dùng định dạng chia sẻ:
+
+```text
+https://tntweddinginvitation.netlify.app/dinner.guest?=b%E1%BA%A1n+Th%E1%BA%AFng+A3
+```
+
+URL trên hiển thị `Bạn Thắng A3`. Các alias sạch `/dinner` và `/dinner/`, cùng biến thể có dấu `/` cuối của `/dinner.` và `/dinner.guest`, đều được hỗ trợ trên Netlify. Query chuẩn `?guest=...` cũng dùng được, ví dụ `/dinner?guest=Bạn+Thắng+A3`.
+
+- Tên ở query `guest` được ưu tiên nếu URL đồng thời có `?guest=...` và tham số khóa rỗng `?=...`.
+- Dấu `+` và `%20` trở thành khoảng trắng; quy tắc trim và viết hoa giống thiệp chính.
+- Không có tên, tên rỗng hoặc mã URL malformed đều hiển thị `Quý khách`.
+
 ## Cấu trúc
 
 ```text
 deploy/
   index.html
+  dinner.html
   app.js
   album-data.js
   cover.js
@@ -44,11 +65,12 @@ deploy/
     Anh-nang-cua-anh.mp3
 scripts/
   generate-album.cjs
+  generate-dinner.cjs
 netlify.toml
 supabase-wishes.sql
 ```
 
-Website không dùng framework hoặc package manager. Trước khi phục vụ thư mục tĩnh `deploy`, Netlify chạy một script Node.js không cần thư viện ngoài để cập nhật danh sách ảnh album.
+Website không dùng framework hoặc package manager. Trước khi phục vụ thư mục tĩnh `deploy`, Netlify chạy hai script Node.js không cần thư viện ngoài: cập nhật danh sách ảnh album rồi tạo thiệp tiệc tối.
 
 Trang `/` mở thiệp đơn và không còn card chọn phiên bản. Bìa đỏ hai cánh với dấu Song Hỷ xuất hiện trước thiệp: chạm/nhấp bất kỳ vị trí nào để mở ngay, hoặc tự bắt đầu mở sau 5 giây. Hai cánh trượt sang hai bên trong khoảng 1,1 giây; khi xong, lớp bìa được ẩn và trả lại thao tác cuộn, bàn phím và nút nhạc. Hai đường dẫn thiệp cũ dành riêng cho phía Thắng và Trang được redirect vĩnh viễn về `/`. Thiệp mới hiển thị cả hai địa điểm. Form RSVP chung chỉ hỏi tên, khả năng tham dự và số lượng người, không hỏi phía mời.
 
@@ -60,9 +82,15 @@ Layout hiện đi theo nhịp thiệp dọc 500px: thiệp cá nhân hóa tối 
 
 Countdown có bốn ô ngày/giờ/phút/giây, cập nhật mỗi giây tới `2026-11-15T09:00:00+07:00`. Khi đến ngày cưới, bộ đếm dừng ở 0. Các ảnh riêng trên thiệp vẫn được cấu hình trong HTML; ảnh trong Album of Love được lấy tự động theo quy tắc tên file bên dưới.
 
+Thiệp chính `/` giữ nguyên **Chủ Nhật, 15/11/2026 lúc 09:00**. Thiệp tiệc tối diễn ra **Thứ Bảy, 14/11/2026 lúc 18:00**; timeline gồm **17:30 Đón khách** và **18:00 Khai tiệc**. Countdown của biến thể này đếm tới 18:00 ngày 14/11; liên kết thêm lịch giữ thời lượng ba giờ, từ 18:00 đến 21:00. Hai địa điểm không thay đổi.
+
+Hai biến thể dùng chung form RSVP, sổ lưu bút, Supabase và khóa lưu trữ trình duyệt hiện có; cấu trúc dữ liệu và hành vi gửi/lưu không thay đổi.
+
 Album of Love lấy mọi file ảnh nằm trực tiếp trong `deploy/assets/` có tên bắt đầu bằng `list`, không phân biệt chữ hoa/thường. Các định dạng hỗ trợ: JPG, JPEG, PNG, WebP, AVIF, GIF, SVG và BMP. Danh sách được xếp tự nhiên theo tên, ví dụ `list1.jpg`, `list2.jpeg`, `list10.jpg`; các ảnh `anh...`, QR và ảnh nền không vào album. Ảnh chính hiển thị đầy đủ trong khung dọc, hàng thumbnail vuốt ngang, hỗ trợ nút trước/sau, phím mũi tên và bấm ảnh để mở lớn.
 
 Script `scripts/generate-album.cjs` tạo `deploy/album-data.js`; không sửa tay file dữ liệu này. Mỗi lần Netlify triển khai từ repository, script tự quét lại các ảnh `list...` được thêm hoặc xóa. Khi xem local hoặc tải thư mục `deploy` lên thủ công, chạy `node scripts/generate-album.cjs` sau khi thay ảnh, rồi tải lại trang. Script chỉ tạo danh sách, không thay đổi ảnh gốc. Nếu chưa có ảnh phù hợp, album hiển thị trạng thái đang cập nhật.
+
+Script `scripts/generate-dinner.cjs` tạo `deploy/dinner.html` từ `deploy/index.html`. Không sửa tay file sinh ra này. Cách tạo tĩnh giúp ngày, giờ và nội dung fallback của tiệc tối vẫn đúng khi JavaScript chưa chạy. Sau mỗi lần sửa nội dung dùng chung trong `index.html`, chạy lại generator bữa tối trước khi xem local hoặc tải thủ công.
 
 Nhấn vào hộp quà để mở popup “Hộp Quà Yêu Thương”: hai cột chú rể/cô dâu, QR đen trắng, tên chủ tài khoản, ngân hàng, số tài khoản và nút sao chép. Có thể đóng bằng nút Đóng, Escape hoặc chạm nền ngoài. Khi không sao chép tự động được, popup chọn số tài khoản để khách sao chép thủ công.
 
@@ -82,17 +110,20 @@ Khi kiểm tra nhạc local, dùng `http://localhost:8000/` như hướng dẫn 
 
 ```powershell
 node scripts/generate-album.cjs
+node scripts/generate-dinner.cjs
 python -m http.server 8000 --directory deploy
 ```
 
-Mở một trong hai URL:
+Python static server mở trực tiếp được cả thiệp chính và file tiệc tối đã sinh:
 
 ```text
 http://localhost:8000/
 http://localhost:8000/?guest=B%E1%BA%A1n+Th%E1%BA%AFng+A3
+http://localhost:8000/dinner.html
+http://localhost:8000/dinner.html?=b%E1%BA%A1n+Th%E1%BA%AFng+A3
 ```
 
-Python static server chỉ kiểm tra được `/` và định dạng query `/?guest=...`; truy cập trực tiếp `/guest=...` sẽ trả 404 vì server này không áp dụng rewrite. Để kiểm tra đường dẫn chia sẻ dạng path và các redirect trước khi triển khai, chạy Netlify CLI:
+Python static server không áp dụng rewrite, vì vậy các đường dẫn đẹp như `/guest=...`, `/dinner.`, `/dinner.guest` và `/dinner` cần được kiểm tra qua Netlify CLI:
 
 ```powershell
 netlify dev
@@ -102,6 +133,8 @@ Sau đó mở URL theo cổng mà Netlify CLI thông báo, ví dụ:
 
 ```text
 http://localhost:8888/guest=b%E1%BA%A1n+Th%E1%BA%AFng+A3
+http://localhost:8888/dinner.
+http://localhost:8888/dinner.guest?=b%E1%BA%A1n+Th%E1%BA%AFng+A3
 ```
 
 ## Chỉnh nội dung
@@ -124,7 +157,7 @@ deploy/index.html
 deploy/assets/
 ```
 
-Ngày hiện tại của thiệp là **Chủ Nhật, 15/11/2026**, lúc **09:00**. Khi thay ngày, cần cập nhật đồng bộ nội dung tĩnh trong `index.html` và cấu hình lịch trong `app.js`.
+Ngày hiện tại của thiệp chính là **Chủ Nhật, 15/11/2026**, lúc **09:00**. Thiệp tiệc tối là **Thứ Bảy, 14/11/2026**, lúc **18:00**. Khi sửa nội dung dùng chung trong `index.html`, cần chạy lại `node scripts/generate-dinner.cjs`; khi thay ngày hoặc lịch, cập nhật đồng bộ cấu hình liên quan rồi sinh lại `dinner.html`.
 
 ## Supabase
 
@@ -151,11 +184,11 @@ Netlify được cấu hình trong [netlify.toml](netlify.toml):
 
 ```toml
 [build]
-  command = "node scripts/generate-album.cjs"
+  command = "node scripts/generate-album.cjs && node scripts/generate-dinner.cjs"
   publish = "deploy"
 ```
 
-Các URL legacy được redirect 301 về `/`. Đường dẫn `/guest=*` được rewrite nội bộ tới `/index.html` với status 200, vì vậy trình duyệt vẫn giữ nguyên URL chia sẻ có tên khách.
+Các URL legacy được redirect 301 về `/`. Đường dẫn `/guest=*` được rewrite nội bộ tới `/index.html`. Các route `/dinner.`, `/dinner.guest`, `/dinner` và biến thể có dấu `/` cuối được rewrite tới `/dinner.html`. Tất cả rewrite dùng status 200 nên trình duyệt giữ nguyên URL chia sẻ và query tên khách.
 
 Repository hiện dùng nhánh `main`. Sau khi thay đổi đã được kiểm tra và push lên GitHub, Netlify sẽ redeploy theo cấu hình trong Netlify Dashboard.
 
@@ -163,6 +196,7 @@ Repository hiện dùng nhánh `main`. Sau khi thay đổi đã được kiểm 
 
 ```powershell
 node scripts/generate-album.cjs
+node scripts/generate-dinner.cjs
 node --check deploy/app.js
 node --test tests/*.test.cjs
 python -m http.server 8000 --directory deploy
@@ -175,6 +209,9 @@ Kiểm tra tối thiểu:
 - `/?guest=...` vẫn hiển thị đúng tên để tương thích với link cũ.
 - Khi path và query cùng có tên, path thắng; tên rỗng hoặc malformed trở về `Quý khách`.
 - Countdown hiển thị bốn ô và đếm đúng tới 09:00 ngày 15/11/2026 (UTC+7).
+- `/dinner.` và `/dinner` hiển thị `Quý khách`; `/dinner.guest?=b%E1%BA%A1n+Th%E1%BA%AFng+A3` hiển thị `Bạn Thắng A3`. Nếu có cả `?guest=...` và `?=...`, giá trị `guest` thắng; giá trị rỗng hoặc malformed trở về `Quý khách`.
+- `dinner.html` có nội dung tĩnh đúng Thứ Bảy 14/11/2026 lúc 18:00 ngay cả khi JavaScript chưa chạy; timeline là 17:30 Đón khách và 18:00 Khai tiệc. Countdown và hai liên kết thêm lịch dùng 18:00–21:00 ngày 14/11, còn địa điểm giữ nguyên.
+- RSVP, sổ lưu bút, Supabase và localStorage hoạt động chung giữa thiệp chính và thiệp tiệc tối mà không đổi schema hay khóa lưu trữ.
 - `#weddingAudio` dùng đúng `/assets/Anh-nang-cua-anh.mp3`, `preload="metadata"` và `loop`; không tạo iframe hoặc gọi YouTube API. Trang thử phát ngay, sau đó dùng tương tác tin cậy đầu tiên làm fallback nếu autoplay bị chặn. Thông báo blocked/error hiển thị rõ; nút nhạc pause/resume giữ nguyên `currentTime`, còn thao tác tắt thủ công ngăn các lần tự bật lại sau đó.
 - Trái tim tự rơi, không cản nút/form; nút hình tim tắt/bật hiệu ứng. Đổi tab tạm dừng và chế độ giảm chuyển động ẩn hiệu ứng hoàn toàn.
 - Tự cuộn chỉ bắt đầu sau khi bìa mở hết, tốc độ khoảng 20 px/giây và không có nút điều khiển riêng. Chạm, cuộn chuột, bàn phím hoặc tương tác biểu mẫu dừng ngay; sau đó không tự chạy lại. Popup, tab ẩn, cuối trang và chế độ giảm chuyển động cũng dừng hoặc ngăn tự cuộn.
