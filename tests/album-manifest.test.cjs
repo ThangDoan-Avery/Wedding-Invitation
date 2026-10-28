@@ -88,9 +88,69 @@ test("manifest preserves filenames through safe path-segment encoding", (t) => {
     manifest[0].src,
     "/assets/list%209%20%23H%E1%BA%A1nh%27s%281%29.jpg",
   );
-  assert.equal(manifest[0].alt, "Ảnh cưới Hữu Thắng và Thu Trang 1");
-  assert.equal(manifest[0].position, "50% 50%");
+  assert.deepEqual(manifest[0], {
+    src: "/assets/list%209%20%23H%E1%BA%A1nh%27s%281%29.jpg",
+    alt: "Ảnh cưới Hữu Thắng và Thu Trang 1",
+    position: "50% 50%",
+  });
   assert.equal(encodePathSegment("a&b<c>.jpg"), "a%26b%3Cc%3E.jpg");
+});
+
+test("optimized image metadata merges by exact original filename while legacy entries stay exact", () => {
+  const filenames = ["list1.jpg", "list2.jpeg"];
+  const imageAssets = {
+    "list1.jpg": {
+      src: " /assets/optimized/list1-main.hash.webp ",
+      srcset: " /assets/optimized/list1-small.hash.webp 480w, /assets/optimized/list1-main.hash.webp 960w ",
+      sizes: " (max-width: 640px) 92vw, 720px ",
+      thumbSrc: " /assets/optimized/list1-thumb.hash.webp ",
+      fullSrc: " /assets/optimized/list1-full.hash.webp ",
+      width: 4609,
+      height: 6913,
+      alt: "Mapping must not replace canonical alt text",
+      position: "10% 20%",
+      unknown: "ignored",
+    },
+  };
+
+  const manifest = createAlbumManifest(filenames, imageAssets);
+  assert.deepEqual(manifest[0], {
+    src: "/assets/optimized/list1-main.hash.webp",
+    alt: "Ảnh cưới Hữu Thắng và Thu Trang 1",
+    position: "50% 50%",
+    srcset: "/assets/optimized/list1-small.hash.webp 480w, /assets/optimized/list1-main.hash.webp 960w",
+    sizes: "(max-width: 640px) 92vw, 720px",
+    thumbSrc: "/assets/optimized/list1-thumb.hash.webp",
+    fullSrc: "/assets/optimized/list1-full.hash.webp",
+    width: 4609,
+    height: 6913,
+  });
+  assert.deepEqual(manifest[1], {
+    src: "/assets/list2.jpeg",
+    alt: "Ảnh cưới Hữu Thắng và Thu Trang 2",
+    position: "50% 50%",
+  });
+  assert.deepEqual(Object.keys(manifest[1]), ["src", "alt", "position"]);
+});
+
+test("invalid optimized fields are omitted without changing the legacy fallback", () => {
+  const manifest = createAlbumManifest(["list1.jpg"], {
+    "list1.jpg": {
+      src: " ",
+      srcset: null,
+      sizes: 42,
+      thumbSrc: [],
+      fullSrc: {},
+      width: 0,
+      height: 12.5,
+    },
+  });
+
+  assert.deepEqual(manifest, [{
+    src: "/assets/list1.jpg",
+    alt: "Ảnh cưới Hữu Thắng và Thu Trang 1",
+    position: "50% 50%",
+  }]);
 });
 
 test("empty asset sets generate an executable empty global manifest", (t) => {
@@ -130,6 +190,35 @@ test("generator reruns deterministically and tracks additions and removals", (t)
   const afterRemoval = generateAlbumData({ assetsDirectory, outputFile });
   assert.equal(afterRemoval.changed, true);
   assert.deepEqual(afterRemoval.filenames, ["list2.jpeg", "list10.jpg"]);
+});
+
+test("generator forwards optimized image mappings into serialized album data", (t) => {
+  const { assetsDirectory, outputFile } = createFixture(t);
+  addFile(assetsDirectory, "list1.jpg");
+  addFile(assetsDirectory, "list2.jpeg");
+  const imageAssets = {
+    "list1.jpg": {
+      src: "/assets/optimized/list1-main.hash.webp",
+      srcset: "/assets/optimized/list1-small.hash.webp 480w, /assets/optimized/list1-main.hash.webp 960w",
+      sizes: "(max-width: 640px) 92vw, 720px",
+      thumbSrc: "/assets/optimized/list1-thumb.hash.webp",
+      fullSrc: "/assets/optimized/list1-full.hash.webp",
+      width: 4609,
+      height: 6913,
+    },
+  };
+
+  const result = generateAlbumData({ assetsDirectory, outputFile, imageAssets });
+  const generated = evaluateGeneratedData(result.content);
+  assert.deepEqual(generated, result.manifest);
+  assert.equal(generated[0].fullSrc, "/assets/optimized/list1-full.hash.webp");
+  assert.equal(generated[0].thumbSrc, "/assets/optimized/list1-thumb.hash.webp");
+  assert.equal(generated[0].width, 4609);
+  assert.deepEqual(generated[1], {
+    src: "/assets/list2.jpeg",
+    alt: "Ảnh cưới Hữu Thắng và Thu Trang 2",
+    position: "50% 50%",
+  });
 });
 
 test("JavaScript serialization escapes HTML-sensitive and line-separator characters", () => {

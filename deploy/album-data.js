@@ -32,33 +32,33 @@ globalThis.INVITATION_ALBUM_PHOTOS = [
     "position": "50% 50%"
   },
   {
-    "src": "/assets/list7.ppeg",
+    "src": "/assets/list7.jpeg",
     "alt": "Ảnh cưới Hữu Thắng và Thu Trang 7",
     "position": "50% 50%"
   },
   {
     "src": "/assets/list9.png",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 9",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 8",
     "position": "50% 50%"
   },
   {
     "src": "/assets/list11.png",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 11",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 9",
     "position": "50% 50%"
   },
   {
     "src": "/assets/list12.png",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 12",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 10",
     "position": "50% 50%"
   },
   {
     "src": "/assets/list13.jpg",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 13",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 11",
     "position": "50% 50%"
   },
   {
     "src": "/assets/list14.jpg",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 14",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 12",
     "position": "50% 50%"
   }
 ];

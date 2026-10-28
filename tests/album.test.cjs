@@ -17,6 +17,8 @@ class MockElement extends MockNode {
   constructor(tagName = "div") {
     super();
     this.attributes = new Map();
+    this.mutations = [];
+    this._src = "";
     this.children = [];
     this.clientWidth = tagName.toLowerCase() === "button" ? 80 : 200;
     this.dataset = {};
@@ -32,6 +34,15 @@ class MockElement extends MockNode {
     this.style = {};
     this.tagName = tagName.toUpperCase();
     this.textContent = "";
+  }
+
+  get src() {
+    return this._src;
+  }
+
+  set src(value) {
+    this._src = String(value);
+    this.mutations.push({ type: "src", value: this._src });
   }
 
   addEventListener(type, listener) {
@@ -81,6 +92,7 @@ class MockElement extends MockNode {
 
   removeAttribute(name) {
     this.attributes.delete(name);
+    this.mutations.push({ type: "removeAttribute", name });
   }
 
   replaceChildren(...children) {
@@ -98,6 +110,7 @@ class MockElement extends MockNode {
 
   setAttribute(name, value) {
     this.attributes.set(name, String(value));
+    this.mutations.push({ type: "setAttribute", name, value: String(value) });
   }
 
   showModal() {
@@ -112,6 +125,23 @@ function makePhotos(count = 7) {
     alt: `Ảnh cưới Hữu Thắng và Thu Trang ${index + 1}`,
     position: "50% 50%",
   }));
+}
+
+function makeOptimizedPhoto(index = 1) {
+  return {
+    src: `/assets/optimized/list${index}-main.hash.webp`,
+    srcset: [
+      `/assets/optimized/list${index}-small.hash.webp 480w`,
+      `/assets/optimized/list${index}-main.hash.webp 960w`,
+    ].join(", "),
+    sizes: "(max-width: 640px) 92vw, 720px",
+    thumbSrc: `/assets/optimized/list${index}-thumb.hash.webp`,
+    fullSrc: `/assets/optimized/list${index}-full.hash.webp`,
+    width: 4609,
+    height: 6913,
+    alt: `Ảnh cưới Hữu Thắng và Thu Trang ${index}`,
+    position: "50% 50%",
+  };
 }
 
 function createHarness({ includeManifest = true, manifest = makePhotos() } = {}) {
@@ -133,6 +163,19 @@ function createHarness({ includeManifest = true, manifest = makePhotos() } = {})
   const dialog = new MockElement("dialog");
   const dialogPhoto = new MockElement("img");
   const closePhoto = new MockElement("button");
+  const optimizedStoryButton = new MockElement("button");
+  const optimizedStoryImage = new MockElement("img");
+  optimizedStoryImage.src = "/assets/optimized/story-small.hash.webp";
+  optimizedStoryImage.currentSrc = "/assets/optimized/story-main.hash.webp";
+  optimizedStoryImage.dataset.fullSrc = "/assets/optimized/story-full.hash.webp";
+  optimizedStoryImage.alt = "Ảnh câu chuyện đã tối ưu";
+  optimizedStoryButton.append(optimizedStoryImage);
+  const responsiveFallbackButton = new MockElement("button");
+  const responsiveFallbackImage = new MockElement("img");
+  responsiveFallbackImage.src = "/assets/story-fallback.jpg";
+  responsiveFallbackImage.currentSrc = "/assets/story-current.webp";
+  responsiveFallbackImage.alt = "Ảnh responsive legacy";
+  responsiveFallbackButton.append(responsiveFallbackImage);
 
   const selectors = new Map([
     ["[data-album]", album],
@@ -156,7 +199,9 @@ function createHarness({ includeManifest = true, manifest = makePhotos() } = {})
       return selectors.get(selector) || null;
     },
     querySelectorAll(selector) {
-      return selector === "[data-photo-open]" ? [mainButton] : [];
+      return selector === "[data-photo-open]"
+        ? [mainButton, optimizedStoryButton, responsiveFallbackButton]
+        : [];
     },
   };
   const window = {};
@@ -185,7 +230,11 @@ function createHarness({ includeManifest = true, manifest = makePhotos() } = {})
     mainButton,
     mainImage,
     nextButton,
+    optimizedStoryButton,
+    optimizedStoryImage,
     previousButton,
+    responsiveFallbackButton,
+    responsiveFallbackImage,
     thumbContainer,
     viewer,
   };
@@ -202,6 +251,9 @@ test("seven manifest photos render dynamic thumbnails and the first image withou
   assert.equal(harness.mainImage.src, "/assets/list1.jpg");
   assert.equal(harness.mainImage.alt, "Ảnh cưới Hữu Thắng và Thu Trang 1");
   assert.equal(harness.mainImage.style.objectPosition, "50% 50%");
+  assert.equal(harness.mainImage.dataset.fullSrc, "/assets/list1.jpg");
+  assert.equal(harness.mainImage.getAttribute("srcset"), null);
+  assert.equal(harness.mainImage.getAttribute("sizes"), null);
   assert.equal(harness.counter.textContent, "1 / 7");
   assert.equal(harness.thumbContainer.scrollCalls.length, 0);
 
@@ -214,8 +266,49 @@ test("seven manifest photos render dynamic thumbnails and the first image withou
     assert.equal(image.src, `/assets/list${index + 1}.jpg`);
     assert.equal(image.alt, "");
     assert.equal(image.loading, "lazy");
+    assert.equal(image.decoding, "async");
     assert.equal(image.style.objectPosition, "50% 50%");
+    assert.equal(image.getAttribute("srcset"), null);
+    assert.equal(image.getAttribute("sizes"), null);
   });
+});
+
+test("optimized entries use responsive main sources and thumbnail-only rail images", () => {
+  const optimized = makeOptimizedPhoto(1);
+  const legacy = makePhotos(2)[1];
+  const harness = createHarness({ manifest: [optimized, legacy] });
+  const optimizedThumb = harness.thumbContainer.children[0].querySelector("img");
+  const legacyThumb = harness.thumbContainer.children[1].querySelector("img");
+  const normalizedPhotos = JSON.parse(
+    vm.runInContext("JSON.stringify(ALBUM_PHOTOS)", harness.context),
+  );
+
+  assert.equal(harness.mainImage.src, optimized.src);
+  assert.equal(harness.mainImage.getAttribute("srcset"), optimized.srcset);
+  assert.equal(harness.mainImage.getAttribute("sizes"), optimized.sizes);
+  assert.equal(harness.mainImage.dataset.fullSrc, optimized.fullSrc);
+  assert.equal(optimizedThumb.src, optimized.thumbSrc);
+  assert.equal(optimizedThumb.getAttribute("srcset"), null);
+  assert.equal(optimizedThumb.getAttribute("sizes"), null);
+  assert.equal(legacyThumb.src, legacy.src);
+  assert.equal(normalizedPhotos[0].width, optimized.width);
+  assert.equal(normalizedPhotos[0].height, optimized.height);
+  assert.equal(normalizedPhotos[1].thumbSrc, legacy.src);
+  assert.equal(normalizedPhotos[1].fullSrc, legacy.src);
+  assert.equal(Object.hasOwn(normalizedPhotos[1], "srcset"), false);
+  assert.equal(Object.hasOwn(normalizedPhotos[1], "sizes"), false);
+
+  harness.nextButton.dispatch("click");
+  assert.equal(harness.mainImage.src, legacy.src);
+  assert.equal(harness.mainImage.getAttribute("srcset"), null);
+  assert.equal(harness.mainImage.getAttribute("sizes"), null);
+  assert.equal(harness.mainImage.dataset.fullSrc, legacy.src);
+
+  harness.previousButton.dispatch("click");
+  assert.equal(harness.mainImage.src, optimized.src);
+  assert.equal(harness.mainImage.getAttribute("srcset"), optimized.srcset);
+  assert.equal(harness.mainImage.getAttribute("sizes"), optimized.sizes);
+  assert.equal(harness.mainImage.dataset.fullSrc, optimized.fullSrc);
 });
 
 test("missing and empty manifests show the empty state without navigation or modulo work", () => {
@@ -343,6 +436,48 @@ test("photo dialog reads the album image source after dynamic navigation", () =>
   assert.equal(harness.dialog.open, true);
 });
 
+test("photo dialog prefers fullSrc and clears responsive candidates before assigning it", () => {
+  const optimized = makeOptimizedPhoto(1);
+  const harness = createHarness({ manifest: [optimized] });
+  harness.context.setupPhotoDialog();
+  harness.dialogPhoto.setAttribute("srcset", "/assets/optimized/dialog-old.webp 480w");
+  harness.dialogPhoto.setAttribute("sizes", "100vw");
+  harness.dialogPhoto.mutations = [];
+
+  harness.mainButton.dispatch("click");
+
+  assert.equal(harness.dialogPhoto.src, optimized.fullSrc);
+  assert.equal(harness.dialogPhoto.alt, optimized.alt);
+  assert.equal(harness.dialogPhoto.getAttribute("srcset"), null);
+  assert.equal(harness.dialogPhoto.getAttribute("sizes"), null);
+  const srcMutationIndex = harness.dialogPhoto.mutations.findIndex(({ type }) => type === "src");
+  const removeSrcsetIndex = harness.dialogPhoto.mutations.findIndex(
+    ({ type, name }) => type === "removeAttribute" && name === "srcset",
+  );
+  const removeSizesIndex = harness.dialogPhoto.mutations.findIndex(
+    ({ type, name }) => type === "removeAttribute" && name === "sizes",
+  );
+  assert.ok(removeSrcsetIndex >= 0 && removeSrcsetIndex < srcMutationIndex);
+  assert.ok(removeSizesIndex >= 0 && removeSizesIndex < srcMutationIndex);
+});
+
+test("photo dialog supports optimized static images and currentSrc legacy fallback", () => {
+  const harness = createHarness();
+  harness.context.setupPhotoDialog();
+
+  harness.optimizedStoryButton.dispatch("click");
+  assert.equal(harness.dialogPhoto.src, harness.optimizedStoryImage.dataset.fullSrc);
+  assert.equal(harness.dialogPhoto.alt, harness.optimizedStoryImage.alt);
+
+  harness.responsiveFallbackButton.dispatch("click");
+  assert.equal(harness.dialogPhoto.src, harness.responsiveFallbackImage.currentSrc);
+  assert.equal(harness.dialogPhoto.alt, harness.responsiveFallbackImage.alt);
+
+  harness.responsiveFallbackImage.currentSrc = "";
+  harness.responsiveFallbackButton.dispatch("click");
+  assert.equal(harness.dialogPhoto.src, harness.responsiveFallbackImage.src);
+});
+
 test("album markup exposes empty dynamic containers and loads its manifest before the app", () => {
   const html = fs.readFileSync(path.join(__dirname, "../deploy/index.html"), "utf8");
   const viewerTag = html.match(/<div\b[^>]*\bid="albumViewer"[^>]*>/u)?.[0];
@@ -359,7 +494,7 @@ test("album markup exposes empty dynamic containers and loads its manifest befor
   assert.ok(emptyTag);
   assert.match(emptyTag, /\bhidden\b/u);
   assert.ok(mainImageTag);
-  assert.match(mainImageTag, /\bsrc="\/assets\/list1\.jpg"/u);
+  assert.match(mainImageTag, /\bsrc="\/assets\/[^"\s]+"/u);
   assert.equal(counterContents?.trim(), "");
   assert.equal(thumbContents?.trim(), "");
 

@@ -34,15 +34,33 @@ const ALBUM_PHOTOS = Array.isArray(globalThis.INVITATION_ALBUM_PHOTOS)
       && typeof photo.src === "string"
       && photo.src.trim()
     ))
-    .map((photo, index) => ({
-      src: photo.src.trim(),
-      alt: typeof photo.alt === "string" && photo.alt.trim()
-        ? photo.alt.trim()
-        : `Ảnh cưới Hữu Thắng và Thu Trang ${index + 1}`,
-      position: typeof photo.position === "string" && photo.position.trim()
-        ? photo.position.trim()
-        : "50% 50%",
-    }))
+    .map((photo, index) => {
+      const src = photo.src.trim();
+      const normalized = {
+        src,
+        alt: typeof photo.alt === "string" && photo.alt.trim()
+          ? photo.alt.trim()
+          : `Ảnh cưới Hữu Thắng và Thu Trang ${index + 1}`,
+        position: typeof photo.position === "string" && photo.position.trim()
+          ? photo.position.trim()
+          : "50% 50%",
+        thumbSrc: typeof photo.thumbSrc === "string" && photo.thumbSrc.trim()
+          ? photo.thumbSrc.trim()
+          : src,
+        fullSrc: typeof photo.fullSrc === "string" && photo.fullSrc.trim()
+          ? photo.fullSrc.trim()
+          : src,
+      };
+      if (typeof photo.srcset === "string" && photo.srcset.trim()) {
+        normalized.srcset = photo.srcset.trim();
+      }
+      if (typeof photo.sizes === "string" && photo.sizes.trim()) {
+        normalized.sizes = photo.sizes.trim();
+      }
+      if (Number.isSafeInteger(photo.width) && photo.width > 0) normalized.width = photo.width;
+      if (Number.isSafeInteger(photo.height) && photo.height > 0) normalized.height = photo.height;
+      return normalized;
+    })
   : [];
 
 const DEFAULT_GUEST = "Quý khách";
@@ -591,7 +609,7 @@ function setupAlbum() {
     button.type = "button";
     button.dataset.albumIndex = String(index);
     button.setAttribute("aria-label", `Xem ảnh ${index + 1}`);
-    image.src = photo.src;
+    image.src = photo.thumbSrc;
     image.alt = "";
     image.loading = "lazy";
     image.decoding = "async";
@@ -605,7 +623,12 @@ function setupAlbum() {
 
   const render = () => {
     const photo = ALBUM_PHOTOS[activeIndex];
+    if (photo.sizes) mainImage.setAttribute("sizes", photo.sizes);
+    else mainImage.removeAttribute("sizes");
+    if (photo.srcset) mainImage.setAttribute("srcset", photo.srcset);
+    else mainImage.removeAttribute("srcset");
     mainImage.src = photo.src;
+    mainImage.dataset.fullSrc = photo.fullSrc;
     mainImage.alt = photo.alt;
     mainImage.style.objectPosition = photo.position;
     counter.textContent = `${activeIndex + 1} / ${ALBUM_PHOTOS.length}`;
@@ -679,7 +702,9 @@ function setupPhotoDialog() {
     button.addEventListener("click", () => {
       const photo = select("img", button);
       if (photo) {
-        dialogPhoto.src = photo.currentSrc || photo.src;
+        dialogPhoto.removeAttribute("srcset");
+        dialogPhoto.removeAttribute("sizes");
+        dialogPhoto.src = photo.dataset.fullSrc || photo.currentSrc || photo.src;
         dialogPhoto.alt = photo.alt;
       }
 

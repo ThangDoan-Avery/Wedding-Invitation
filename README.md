@@ -64,13 +64,31 @@ deploy/
   assets/
     Anh-nang-cua-anh.mp3
 scripts/
+  build-site.cjs
+  optimize-images.cjs
   generate-album.cjs
   generate-dinner.cjs
+dist/                 # website tối ưu được sinh khi build, không sửa tay
+package.json
+package-lock.json
 netlify.toml
 supabase-wishes.sql
 ```
 
-Website không dùng framework hoặc package manager. Trước khi phục vụ thư mục tĩnh `deploy`, Netlify chạy hai script Node.js không cần thư viện ngoài: cập nhật danh sách ảnh album rồi tạo thiệp tiệc tối.
+Website phía trình duyệt vẫn là HTML/CSS/JavaScript tĩnh, không dùng framework. Quá trình build dùng Node.js (từ 20.9, Netlify dùng Node 22), npm và Sharp để tạo ảnh WebP rồi sinh website trong `dist`. Thư mục `deploy` là nguồn nội dung và ảnh gốc; **Netlify chỉ xuất bản `dist`**, không tải toàn bộ ảnh gốc lên bản website tối ưu.
+
+### Tối ưu ảnh
+
+Chạy `npm ci` lần đầu, sau đó `npm run build` khi thay đổi ảnh hoặc nội dung. Build thực hiện:
+
+- Giữ nguyên từng byte của ảnh nguồn trong `deploy/assets`; không dùng AI, không sửa khuôn mặt, không crop ảnh và không phóng lớn ảnh nhỏ.
+- Tạo các bản WebP rộng tối đa 640/960/1280 px (chất lượng 84) để trình duyệt chọn bằng `srcset`/`sizes`.
+- Tạo thumbnail riêng tối đa 160 px (chất lượng 76) cho album; mở ảnh dùng bản tối đa 1920 px (chất lượng 88).
+- Giữ hướng ảnh EXIF và chuyển profile màu sang sRGB; không đưa EXIF/GPS vào bản web. Việc thu nhỏ/nén có mất dữ liệu không bảo toàn pixel của bản web, vì vậy hãy dùng ảnh nguồn để lưu trữ/in ảnh.
+- Không nén lại mã QR và icon nhỏ. Các ảnh động hoặc định dạng chưa hỗ trợ tối ưu được giữ nguyên khi cần dùng; file ảnh nguồn hỏng làm build báo lỗi rõ ràng.
+- Cập nhật HTML, CSS, danh sách album và tạo bản tiệc tối từ cùng nội dung đã tối ưu. Ảnh gốc lớn và thư mục `deploy/temp` không được chép vào `dist`.
+
+Kết quả dung lượng, hash ảnh gốc và đường dẫn các kích thước nằm trong `dist/image-optimization-report.json`. Ảnh tối ưu có tên chứa hash nội dung để tránh dùng nhầm cache khi thay ảnh. `dist` là thư mục sinh tự động và được tạo lại mỗi lần build; không đặt tệp cần giữ hoặc sửa nội dung trực tiếp trong đó. Build từ chối xóa một thư mục `dist` không có dấu nhận diện output của dự án.
 
 Trang `/` mở thiệp đơn và không còn card chọn phiên bản. Bìa đỏ hai cánh với dấu Song Hỷ xuất hiện trước thiệp: chạm/nhấp bất kỳ vị trí nào để mở ngay, hoặc tự bắt đầu mở sau 5 giây. Hai cánh trượt sang hai bên trong khoảng 1,1 giây; khi xong, lớp bìa được ẩn và trả lại thao tác cuộn, bàn phím và nút nhạc. Hai đường dẫn thiệp cũ dành riêng cho phía Thắng và Trang được redirect vĩnh viễn về `/`. Thiệp mới hiển thị cả hai địa điểm. Form RSVP chung chỉ hỏi tên, khả năng tham dự và số lượng người, không hỏi phía mời.
 
@@ -88,9 +106,9 @@ Hai biến thể dùng chung form RSVP, sổ lưu bút, Supabase và khóa lưu 
 
 Album of Love lấy mọi file ảnh nằm trực tiếp trong `deploy/assets/` có tên bắt đầu bằng `list`, không phân biệt chữ hoa/thường. Các định dạng hỗ trợ: JPG, JPEG, PNG, WebP, AVIF, GIF, SVG và BMP. Danh sách được xếp tự nhiên theo tên, ví dụ `list1.jpg`, `list2.jpeg`, `list10.jpg`; các ảnh `anh...`, QR và ảnh nền không vào album. Ảnh chính hiển thị đầy đủ trong khung dọc, hàng thumbnail vuốt ngang, hỗ trợ nút trước/sau, phím mũi tên và bấm ảnh để mở lớn.
 
-Script `scripts/generate-album.cjs` tạo `deploy/album-data.js`; không sửa tay file dữ liệu này. Mỗi lần Netlify triển khai từ repository, script tự quét lại các ảnh `list...` được thêm hoặc xóa. Khi xem local hoặc tải thư mục `deploy` lên thủ công, chạy `node scripts/generate-album.cjs` sau khi thay ảnh, rồi tải lại trang. Script chỉ tạo danh sách, không thay đổi ảnh gốc. Nếu chưa có ảnh phù hợp, album hiển thị trạng thái đang cập nhật.
+Script `scripts/generate-album.cjs` quét ảnh `list...` trong `deploy/assets`; không sửa tay file dữ liệu sinh ra. `npm run build` truyền mapping ảnh tối ưu vào script này để tạo `dist/album-data.js`. Mỗi lần Netlify build, các ảnh mới/xóa đều được cập nhật; không có danh sách ảnh cố định phải sửa tay. Nếu chưa có ảnh phù hợp, album hiển thị trạng thái đang cập nhật. Có thể chạy riêng `node scripts/generate-album.cjs` để làm mới `deploy/album-data.js` cho bản xem nguồn chưa tối ưu.
 
-Script `scripts/generate-dinner.cjs` tạo `deploy/dinner.html` từ `deploy/index.html`. Không sửa tay file sinh ra này. Cách tạo tĩnh giúp ngày, giờ và nội dung fallback của tiệc tối vẫn đúng khi JavaScript chưa chạy. Sau mỗi lần sửa nội dung dùng chung trong `index.html`, chạy lại generator bữa tối trước khi xem local hoặc tải thủ công.
+Script `scripts/generate-dinner.cjs` tạo thiệp tối từ thiệp chính. Trong build tối ưu, nguồn là `dist/index.html` và output là `dist/dinner.html`, nên cả hai dùng chung ảnh nhẹ. Chạy riêng script sẽ sinh `deploy/dinner.html` từ `deploy/index.html` để xem nguồn chưa tối ưu. Không sửa tay file sinh ra. Nội dung tĩnh của tiệc tối vẫn đúng khi JavaScript chưa chạy.
 
 Nhấn vào hộp quà để mở popup “Hộp Quà Yêu Thương”: hai cột chú rể/cô dâu, QR đen trắng, tên chủ tài khoản, ngân hàng, số tài khoản và nút sao chép. Có thể đóng bằng nút Đóng, Escape hoặc chạm nền ngoài. Khi không sao chép tự động được, popup chọn số tài khoản để khách sao chép thủ công.
 
@@ -109,9 +127,9 @@ Khi kiểm tra nhạc local, dùng `http://localhost:8000/` như hướng dẫn 
 ## Chạy local
 
 ```powershell
-node scripts/generate-album.cjs
-node scripts/generate-dinner.cjs
-python -m http.server 8000 --directory deploy
+npm ci
+npm run build
+python -m http.server 8000 --directory dist
 ```
 
 Python static server mở trực tiếp được cả thiệp chính và file tiệc tối đã sinh:
@@ -157,7 +175,7 @@ deploy/index.html
 deploy/assets/
 ```
 
-Ngày hiện tại của thiệp chính là **Chủ Nhật, 15/11/2026**, lúc **09:00**. Thiệp tiệc tối là **Thứ Bảy, 14/11/2026**, lúc **18:00**. Khi sửa nội dung dùng chung trong `index.html`, cần chạy lại `node scripts/generate-dinner.cjs`; khi thay ngày hoặc lịch, cập nhật đồng bộ cấu hình liên quan rồi sinh lại `dinner.html`.
+Ngày hiện tại của thiệp chính là **Chủ Nhật, 15/11/2026**, lúc **09:00**. Thiệp tiệc tối là **Thứ Bảy, 14/11/2026**, lúc **18:00**. Sau khi sửa nội dung hoặc ảnh nguồn, chạy `npm run build` để sinh lại cả hai bản tối ưu; khi thay ngày hoặc lịch, cập nhật đồng bộ cấu hình liên quan trước khi build.
 
 ## Supabase
 
@@ -184,22 +202,28 @@ Netlify được cấu hình trong [netlify.toml](netlify.toml):
 
 ```toml
 [build]
-  command = "node scripts/generate-album.cjs && node scripts/generate-dinner.cjs"
-  publish = "deploy"
+  command = "npm run build"
+  publish = "dist"
+
+  [build.environment]
+    NODE_VERSION = "22"
 ```
 
 Các URL legacy được redirect 301 về `/`. Đường dẫn `/guest=*` được rewrite nội bộ tới `/index.html`. Các route `/dinner.`, `/dinner.guest`, `/dinner` và biến thể có dấu `/` cuối được rewrite tới `/dinner.html`. Tất cả rewrite dùng status 200 nên trình duyệt giữ nguyên URL chia sẻ và query tên khách.
 
 Repository hiện dùng nhánh `main`. Sau khi thay đổi đã được kiểm tra và push lên GitHub, Netlify sẽ redeploy theo cấu hình trong Netlify Dashboard.
 
+Nếu triển khai bằng kéo thả thủ công, chạy `npm ci` và `npm run build`, rồi tải **thư mục `dist`**, không phải `deploy`. Ảnh gốc vẫn ở `deploy/assets` để chỉnh sửa/lưu trữ.
+
 ## Kiểm tra nhanh
 
 ```powershell
 node scripts/generate-album.cjs
 node scripts/generate-dinner.cjs
+npm run build
 node --check deploy/app.js
-node --test tests/*.test.cjs
-python -m http.server 8000 --directory deploy
+npm test
+python -m http.server 8000 --directory dist
 ```
 
 Kiểm tra tối thiểu:
@@ -217,6 +241,7 @@ Kiểm tra tối thiểu:
 - Tự cuộn chỉ bắt đầu sau khi bìa mở hết, tốc độ khoảng 20 px/giây và không có nút điều khiển riêng. Chạm, cuộn chuột, bàn phím hoặc tương tác biểu mẫu dừng ngay; sau đó không tự chạy lại. Popup, tab ẩn, cuối trang và chế độ giảm chuyển động cũng dừng hoặc ngăn tự cuộn.
 - Hai link bản đồ và hai link thêm lịch mở đúng địa điểm.
 - Album nhận đủ ảnh `list...`, đúng thứ tự số, không chứa ảnh khác; thumbnail/counter tự cập nhật theo số ảnh. Trước/sau, phím mũi tên và mở ảnh lớn phải trỏ đúng file; hàng thumbnail không làm tràn ngang trang.
+- Khi xem bản `dist`, ảnh trong nội dung dùng WebP phù hợp kích thước màn hình, thumbnail dùng file nhỏ riêng, mở ảnh dùng bản lớn hơn; không tải lại ảnh gốc nhiều MB. Cả thiệp chính và tiệc tối dùng cùng mapping ảnh. Thêm hoặc xóa một ảnh `list...` rồi build lại phải cập nhật album và loại bỏ bản tối ưu cũ khỏi output.
 - RSVP (gồm số lượng người) và lời chúc gửi thành công lên Supabase sau khi cập nhật schema.
 - QR ngân hàng quét đúng tên và số tài khoản.
 - Popup quà cưới mở/đóng đúng, sao chép đúng số tài khoản của từng bên và trả focus về nút mở khi đóng.
