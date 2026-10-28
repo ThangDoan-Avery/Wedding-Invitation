@@ -12,7 +12,7 @@ globalThis.INVITATION_ALBUM_PHOTOS = [
     "position": "50% 50%"
   },
   {
-    "src": "/assets/list3.jpeg",
+    "src": "/assets/list3.jpg",
     "alt": "Ảnh cưới Hữu Thắng và Thu Trang 3",
     "position": "50% 50%"
   },
@@ -22,38 +22,43 @@ globalThis.INVITATION_ALBUM_PHOTOS = [
     "position": "50% 50%"
   },
   {
-    "src": "/assets/list6.jpg",
+    "src": "/assets/list5.jpg",
     "alt": "Ảnh cưới Hữu Thắng và Thu Trang 5",
     "position": "50% 50%"
   },
   {
-    "src": "/assets/list7.png",
+    "src": "/assets/list6.jpg",
     "alt": "Ảnh cưới Hữu Thắng và Thu Trang 6",
     "position": "50% 50%"
   },
   {
-    "src": "/assets/list8.png",
+    "src": "/assets/list7.ppeg",
     "alt": "Ảnh cưới Hữu Thắng và Thu Trang 7",
     "position": "50% 50%"
   },
   {
     "src": "/assets/list9.png",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 8",
-    "position": "50% 50%"
-  },
-  {
-    "src": "/assets/list10.png",
     "alt": "Ảnh cưới Hữu Thắng và Thu Trang 9",
     "position": "50% 50%"
   },
   {
     "src": "/assets/list11.png",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 10",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 11",
     "position": "50% 50%"
   },
   {
     "src": "/assets/list12.png",
-    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 11",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 12",
+    "position": "50% 50%"
+  },
+  {
+    "src": "/assets/list13.jpg",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 13",
+    "position": "50% 50%"
+  },
+  {
+    "src": "/assets/list14.jpg",
+    "alt": "Ảnh cưới Hữu Thắng và Thu Trang 14",
     "position": "50% 50%"
   }
 ];

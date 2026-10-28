@@ -14,7 +14,7 @@ const WEDDING = {
       title: "Tiệc cưới Hữu Thắng & Thu Trang - Nhà trai",
       startUtc: "20261115T020000Z",
       endUtc: "20261115T050000Z",
-      location: "Tư gia nhà trai, thôn 3 An Quý, xã Vĩnh Hải, thành phố Hải Phòng",
+      location: "Tư gia nhà trai, thôn 5 An Quý, xã Vĩnh Hải, thành phố Hải Phòng",
     },
     Tr: {
       title: "Tiệc cưới Hữu Thắng & Thu Trang - Nhà gái",

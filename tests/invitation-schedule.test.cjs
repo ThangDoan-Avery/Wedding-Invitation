@@ -73,7 +73,7 @@ test("default wedding schedule remains the current 09:00 ceremony on 15 November
   assert.equal(wedding.events.Th.title, "Tiệc cưới Hữu Thắng & Thu Trang - Nhà trai");
   assert.equal(
     wedding.events.Th.location,
-    "Tư gia nhà trai, thôn 3 An Quý, xã Vĩnh Hải, thành phố Hải Phòng",
+    "Tư gia nhà trai, thôn 5 An Quý, xã Vĩnh Hải, thành phố Hải Phòng",
   );
   assert.equal(wedding.events.Tr.title, "Tiệc cưới Hữu Thắng & Thu Trang - Nhà gái");
   assert.equal(
