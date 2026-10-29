@@ -321,7 +321,7 @@ test("buildSite optimizes a disposable project, preserves sources, and cleans al
     assert.match(rootHtml, /2026-11-15T09:00:00\+07:00/u);
     assert.doesNotMatch(rootHtml, /data-invitation-variant="dinner"/u);
     assert.match(dinnerHtml, /data-invitation-variant="dinner"/u);
-    assert.match(dinnerHtml, /2026-11-14T18:00:00\+07:00/u);
+    assert.match(dinnerHtml, /2026-11-14T17:00:00\+07:00/u);
     assert.deepEqual(imageTags(dinnerHtml), imageTags(rootHtml));
 
     const firstManifest = evaluateAlbumData(path.join(dist, "album-data.js"));

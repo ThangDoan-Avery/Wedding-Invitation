@@ -14,7 +14,7 @@ const DEFAULT_EVENT_TIMES = {
   startUtc: "20261115T020000Z",
   endUtc: "20261115T050000Z",
 };
-const DINNER_START = "2026-11-14T18:00:00+07:00";
+const DINNER_START = "2026-11-14T17:00:00+07:00";
 const DINNER_END = "2026-11-14T21:00:00+07:00";
 
 function createContext(dataset, { includeDocument = true } = {}) {
@@ -93,7 +93,7 @@ test("valid dinner data applies before rendering and remains timezone-independen
     assert.deepEqual(wedding.date, { year: 2026, month: 11, day: 14 });
     assert.equal(wedding.countdownTargetISO, DINNER_START);
     for (const side of ["Th", "Tr"]) {
-      assert.equal(wedding.events[side].startUtc, "20261114T110000Z");
+      assert.equal(wedding.events[side].startUtc, "20261114T100000Z");
       assert.equal(wedding.events[side].endUtc, "20261114T140000Z");
       assert.equal(wedding.events[side].title, before.events[side].title);
       assert.equal(wedding.events[side].location, before.events[side].location);
@@ -105,8 +105,8 @@ test("valid dinner data applies before rendering and remains timezone-independen
     const brideCalendar = new URL(
       vm.runInContext("buildCalendarUrl(WEDDING.events.Tr)", context),
     );
-    assert.equal(groomCalendar.searchParams.get("dates"), "20261114T110000Z/20261114T140000Z");
-    assert.equal(brideCalendar.searchParams.get("dates"), "20261114T110000Z/20261114T140000Z");
+    assert.equal(groomCalendar.searchParams.get("dates"), "20261114T100000Z/20261114T140000Z");
+    assert.equal(brideCalendar.searchParams.get("dates"), "20261114T100000Z/20261114T140000Z");
     assert.equal(groomCalendar.searchParams.get("text"), before.events.Th.title);
     assert.equal(groomCalendar.searchParams.get("location"), before.events.Th.location);
     assert.equal(brideCalendar.searchParams.get("text"), before.events.Tr.title);
@@ -124,7 +124,7 @@ test("missing, invalid, and non-dinner schedule data never partially mutates def
     ["blank start", dinnerDataset({ weddingStart: "" })],
     ["malformed start", dinnerDataset({ weddingStart: "not-a-date" })],
     ["malformed end", dinnerDataset({ weddingEnd: "2026-11-14T21:00:00" })],
-    ["end before start", dinnerDataset({ weddingEnd: "2026-11-14T17:00:00+07:00" })],
+    ["end before start", dinnerDataset({ weddingEnd: "2026-11-14T16:00:00+07:00" })],
     ["same start and end", dinnerDataset({ weddingEnd: DINNER_START })],
   ];
 

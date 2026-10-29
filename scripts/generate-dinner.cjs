@@ -8,7 +8,7 @@ const DEFAULT_SOURCE_FILE = path.join(PROJECT_ROOT, "deploy", "index.html");
 const DEFAULT_OUTPUT_FILE = path.join(PROJECT_ROOT, "deploy", "dinner.html");
 
 const DINNER_BODY_ATTRIBUTES =
-  'data-invitation-variant="dinner" data-wedding-start="2026-11-14T18:00:00+07:00" data-wedding-end="2026-11-14T21:00:00+07:00"';
+  'data-invitation-variant="dinner" data-wedding-start="2026-11-14T17:00:00+07:00" data-wedding-end="2026-11-14T21:00:00+07:00"';
 
 const ROOT_TIMELINE_ROWS = [
   {
@@ -35,13 +35,13 @@ const ROOT_TIMELINE_ROWS = [
 
 const DINNER_TIMELINE_ROWS = [
   {
-    datetime: "2026-11-14T17:30:00+07:00",
-    displayTime: "17:30",
-    label: "Đón khách",
+    datetime: "2026-11-14T17:00:00+07:00",
+    displayTime: "17:00",
+    label: "Đón tiếp",
   },
   {
-    datetime: "2026-11-14T18:00:00+07:00",
-    displayTime: "18:00",
+    datetime: "2026-11-14T17:30:00+07:00",
+    displayTime: "17:30",
     label: "Khai tiệc",
   },
 ];
@@ -226,14 +226,14 @@ function renderDinnerHtml(sourceHtml) {
   html = replaceLiteral(
     html,
     '<time class="opening-invitation__date" datetime="2026-11-15T09:00:00+07:00">',
-    '<time class="opening-invitation__date" datetime="2026-11-14T18:00:00+07:00">',
+    '<time class="opening-invitation__date" datetime="2026-11-14T17:00:00+07:00">',
     1,
     "opening invitation datetime",
   );
   html = replaceLiteral(
     html,
     "09:00 · Chủ Nhật · 15.11.2026",
-    "18:00 · Thứ Bảy · 14.11.2026",
+    "17:00 · Thứ Bảy · 14.11.2026",
     1,
     "opening invitation date text",
   );
@@ -247,7 +247,7 @@ function renderDinnerHtml(sourceHtml) {
   html = replaceLiteral(
     html,
     "<span>Chủ Nhật · 09:00</span>",
-    "<span>Thứ Bảy · 18:00</span>",
+    "<span>Thứ Bảy · 17:00</span>",
     1,
     "hero weekday and time",
   );
@@ -255,14 +255,14 @@ function renderDinnerHtml(sourceHtml) {
   html = replaceLiteral(
     html,
     '<p class="reception-card__weekday">Chủ Nhật - 09:00</p>',
-    '<p class="reception-card__weekday">Thứ Bảy - 18:00</p>',
+    '<p class="reception-card__weekday">Thứ Bảy - 17:00</p>',
     2,
     "reception weekday and time",
   );
   html = replaceLiteral(
     html,
     '<time class="reception-card__date" datetime="2026-11-15T09:00:00+07:00">15 . 11 . 2026</time>',
-    '<time class="reception-card__date" datetime="2026-11-14T18:00:00+07:00">14 . 11 . 2026</time>',
+    '<time class="reception-card__date" datetime="2026-11-14T17:00:00+07:00">14 . 11 . 2026</time>',
     2,
     "reception date",
   );
@@ -286,21 +286,21 @@ function renderDinnerHtml(sourceHtml) {
   html = replaceLiteral(
     html,
     "20261115T020000Z%2F20261115T050000Z",
-    "20261114T110000Z%2F20261114T140000Z",
+    "20261114T100000Z%2F20261114T140000Z",
     2,
     "Google Calendar date range",
   );
   html = replaceLiteral(
     html,
     'aria-label="Đếm ngược đến 09:00 ngày 15 tháng 11 năm 2026"',
-    'aria-label="Đếm ngược đến 18:00 ngày 14 tháng 11 năm 2026"',
+    'aria-label="Đếm ngược đến 17:00 ngày 14 tháng 11 năm 2026"',
     1,
     "countdown accessible label",
   );
   html = replaceLiteral(
     html,
     '<p class="sr-only" id="countdownStatus" role="status">Ngày cưới: 09:00, Chủ Nhật, 15/11/2026.</p>',
-    '<p class="sr-only" id="countdownStatus" role="status">Ngày cưới: 18:00, Thứ Bảy, 14/11/2026.</p>',
+    '<p class="sr-only" id="countdownStatus" role="status">Ngày cưới: 17:00, Thứ Bảy, 14/11/2026.</p>',
     1,
     "countdown status",
   );

@@ -63,7 +63,7 @@ function replaceChecked(value, pattern, replacement, expectedCount, label) {
 
 function maskVariantFields(html) {
   let masked = html.replace(
-    ' data-invitation-variant="dinner" data-wedding-start="2026-11-14T18:00:00+07:00" data-wedding-end="2026-11-14T21:00:00+07:00"',
+    ' data-invitation-variant="dinner" data-wedding-start="2026-11-14T17:00:00+07:00" data-wedding-end="2026-11-14T21:00:00+07:00"',
     "",
   );
 
@@ -83,7 +83,7 @@ function maskVariantFields(html) {
   );
   masked = replaceChecked(
     masked,
-    /<span>(?:Chủ Nhật · 09:00|Thứ Bảy · 18:00)<\/span>/gu,
+    /<span>(?:Chủ Nhật · 09:00|Thứ Bảy · 17:00)<\/span>/gu,
     "<span>{{HERO_WEEKDAY_TIME}}</span>",
     1,
     "hero weekday and time",
@@ -202,22 +202,22 @@ test("root invitation remains the four-event Sunday source", () => {
 test("dinner invitation uses Saturday evening body metadata and two events", () => {
   assert.match(
     dinnerHtml,
-    /<body data-invitation-variant="dinner" data-wedding-start="2026-11-14T18:00:00\+07:00" data-wedding-end="2026-11-14T21:00:00\+07:00">/u,
+    /<body data-invitation-variant="dinner" data-wedding-start="2026-11-14T17:00:00\+07:00" data-wedding-end="2026-11-14T21:00:00\+07:00">/u,
   );
   assert.equal(countLiteral(dinnerHtml, 'data-invitation-variant="dinner"'), 1);
-  assert.equal(countLiteral(dinnerHtml, 'data-wedding-start="2026-11-14T18:00:00+07:00"'), 1);
+  assert.equal(countLiteral(dinnerHtml, 'data-wedding-start="2026-11-14T17:00:00+07:00"'), 1);
   assert.equal(countLiteral(dinnerHtml, 'data-wedding-end="2026-11-14T21:00:00+07:00"'), 1);
   assert.deepEqual(getTimeline(dinnerHtml), {
     date: "Thứ Bảy · 14.11.2026",
     rows: [
       {
-        datetime: "2026-11-14T17:30:00+07:00",
-        displayTime: "17:30",
-        label: "Đón khách",
+        datetime: "2026-11-14T17:00:00+07:00",
+        displayTime: "17:00",
+        label: "Đón tiếp",
       },
       {
-        datetime: "2026-11-14T18:00:00+07:00",
-        displayTime: "18:00",
+        datetime: "2026-11-14T17:30:00+07:00",
+        displayTime: "17:30",
         label: "Khai tiệc",
       },
     ],
@@ -227,20 +227,20 @@ test("dinner invitation uses Saturday evening body metadata and two events", () 
 test("all dinner date and time surfaces are updated", () => {
   assert.match(
     dinnerHtml,
-    /<time class="opening-invitation__date" datetime="2026-11-14T18:00:00\+07:00">\s*18:00 · Thứ Bảy · 14\.11\.2026\s*<\/time>/u,
+    /<time class="opening-invitation__date" datetime="2026-11-14T17:00:00\+07:00">\s*17:00 · Thứ Bảy · 14\.11\.2026\s*<\/time>/u,
   );
   assert.match(
     dinnerHtml,
-    /<div class="template-hero__schedule">[\s\S]*?<strong>14 · 11 · 2026<\/strong>\s*<span>Thứ Bảy · 18:00<\/span>/u,
+    /<div class="template-hero__schedule">[\s\S]*?<strong>14 · 11 · 2026<\/strong>\s*<span>Thứ Bảy · 17:00<\/span>/u,
   );
   assert.equal(
-    countLiteral(dinnerHtml, '<p class="reception-card__weekday">Thứ Bảy - 18:00</p>'),
+    countLiteral(dinnerHtml, '<p class="reception-card__weekday">Thứ Bảy - 17:00</p>'),
     2,
   );
   assert.equal(
     countLiteral(
       dinnerHtml,
-      '<time class="reception-card__date" datetime="2026-11-14T18:00:00+07:00">14 . 11 . 2026</time>',
+      '<time class="reception-card__date" datetime="2026-11-14T17:00:00+07:00">14 . 11 . 2026</time>',
     ),
     2,
   );
@@ -253,20 +253,22 @@ test("all dinner date and time surfaces are updated", () => {
   );
   assert.equal(countLiteral(dinnerHtml, "<strong>Thứ Bảy · 14.11.2026</strong>"), 1);
   assert.equal(
-    countLiteral(dinnerHtml, "20261114T110000Z%2F20261114T140000Z"),
+    countLiteral(dinnerHtml, "20261114T100000Z%2F20261114T140000Z"),
     2,
   );
   assert.match(
     dinnerHtml,
-    /aria-label="Đếm ngược đến 18:00 ngày 14 tháng 11 năm 2026"/u,
+    /aria-label="Đếm ngược đến 17:00 ngày 14 tháng 11 năm 2026"/u,
   );
   assert.match(
     dinnerHtml,
-    />Ngày cưới: 18:00, Thứ Bảy, 14\/11\/2026\.<\/p>/u,
+    />Ngày cưới: 17:00, Thứ Bảy, 14\/11\/2026\.<\/p>/u,
   );
   assert.match(dinnerHtml, /Hẹn gặp bạn vào ngày 14 tháng 11 năm 2026\./u);
 
   for (const staleValue of [
+    "18:00",
+    "20261114T110000Z",
     "2026-11-15T",
     "20261115T",
     "15.11.2026",

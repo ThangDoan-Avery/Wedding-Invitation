@@ -100,7 +100,7 @@ Layout hiện đi theo nhịp thiệp dọc 500px: thiệp cá nhân hóa tối 
 
 Countdown có bốn ô ngày/giờ/phút/giây, cập nhật mỗi giây tới `2026-11-15T09:00:00+07:00`. Khi đến ngày cưới, bộ đếm dừng ở 0. Các ảnh riêng trên thiệp vẫn được cấu hình trong HTML; ảnh trong Album of Love được lấy tự động theo quy tắc tên file bên dưới.
 
-Thiệp chính `/` giữ nguyên **Chủ Nhật, 15/11/2026 lúc 09:00**. Thiệp tiệc tối diễn ra **Thứ Bảy, 14/11/2026 lúc 18:00**; timeline gồm **17:30 Đón khách** và **18:00 Khai tiệc**. Countdown của biến thể này đếm tới 18:00 ngày 14/11; liên kết thêm lịch giữ thời lượng ba giờ, từ 18:00 đến 21:00. Hai địa điểm không thay đổi.
+Thiệp chính `/` giữ nguyên **Chủ Nhật, 15/11/2026 lúc 09:00**. Thiệp tiệc tối mời khách lúc **17:00, Thứ Bảy, 14/11/2026**; timeline gồm **17:00 Đón tiếp** và **17:30 Khai tiệc**. Countdown của biến thể này đếm tới 17:00 ngày 14/11; liên kết thêm lịch bắt đầu lúc 17:00 và giữ giờ kết thúc 21:00. Hai địa điểm không thay đổi.
 
 Hai biến thể dùng chung form RSVP, sổ lưu bút, Supabase và khóa lưu trữ trình duyệt hiện có; cấu trúc dữ liệu và hành vi gửi/lưu không thay đổi.
 
@@ -175,7 +175,7 @@ deploy/index.html
 deploy/assets/
 ```
 
-Ngày hiện tại của thiệp chính là **Chủ Nhật, 15/11/2026**, lúc **09:00**. Thiệp tiệc tối là **Thứ Bảy, 14/11/2026**, lúc **18:00**. Sau khi sửa nội dung hoặc ảnh nguồn, chạy `npm run build` để sinh lại cả hai bản tối ưu; khi thay ngày hoặc lịch, cập nhật đồng bộ cấu hình liên quan trước khi build.
+Ngày hiện tại của thiệp chính là **Chủ Nhật, 15/11/2026**, lúc **09:00**. Thiệp tiệc tối là **Thứ Bảy, 14/11/2026**, mời khách lúc **17:00**, khai tiệc lúc **17:30**. Sau khi sửa nội dung hoặc ảnh nguồn, chạy `npm run build` để sinh lại cả hai bản tối ưu; khi thay ngày hoặc lịch, cập nhật đồng bộ cấu hình liên quan trước khi build.
 
 ## Supabase
 
@@ -234,7 +234,7 @@ Kiểm tra tối thiểu:
 - Khi path và query cùng có tên, path thắng; tên rỗng hoặc malformed trở về `Quý khách`.
 - Countdown hiển thị bốn ô và đếm đúng tới 09:00 ngày 15/11/2026 (UTC+7).
 - `/dinner.` và `/dinner` hiển thị `Quý khách`; `/dinner.guest?=b%E1%BA%A1n+Th%E1%BA%AFng+A3` hiển thị `Bạn Thắng A3`. Nếu có cả `?guest=...` và `?=...`, giá trị `guest` thắng; giá trị rỗng hoặc malformed trở về `Quý khách`.
-- `dinner.html` có nội dung tĩnh đúng Thứ Bảy 14/11/2026 lúc 18:00 ngay cả khi JavaScript chưa chạy; timeline là 17:30 Đón khách và 18:00 Khai tiệc. Countdown và hai liên kết thêm lịch dùng 18:00–21:00 ngày 14/11, còn địa điểm giữ nguyên.
+- `dinner.html` có nội dung tĩnh đúng Thứ Bảy 14/11/2026 lúc 17:00 ngay cả khi JavaScript chưa chạy; timeline là 17:00 Đón tiếp và 17:30 Khai tiệc. Countdown đếm tới 17:00; hai liên kết thêm lịch dùng 17:00–21:00 ngày 14/11, còn địa điểm giữ nguyên.
 - RSVP, sổ lưu bút, Supabase và localStorage hoạt động chung giữa thiệp chính và thiệp tiệc tối mà không đổi schema hay khóa lưu trữ.
 - `#weddingAudio` dùng đúng `/assets/Anh-nang-cua-anh.mp3`, `preload="metadata"` và `loop`; không tạo iframe hoặc gọi YouTube API. Trang thử phát ngay, sau đó dùng tương tác tin cậy đầu tiên làm fallback nếu autoplay bị chặn. Thông báo blocked/error hiển thị rõ; nút nhạc pause/resume giữ nguyên `currentTime`, còn thao tác tắt thủ công ngăn các lần tự bật lại sau đó.
 - Trái tim tự rơi, không cản nút/form; nút hình tim tắt/bật hiệu ứng. Đổi tab tạm dừng và chế độ giảm chuyển động ẩn hiệu ứng hoàn toàn.
